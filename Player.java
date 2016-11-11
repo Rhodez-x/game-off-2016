@@ -24,9 +24,9 @@ public class Player {
     public void turn(Player other) {
         //board.onTurnStart(this);
         for(int i=1; i<4; i++){
+            System.out.println("Choose what to do. \n 1 = Draw card \n 2 = Play card directly \n 3 = place a card in a function ");
             Scanner sc = new Scanner(System.in);
             int chooise = sc.nextInt();
-            System.out.println("Choose what to do. \n 1 = Draw card \n 2 = Play card directly \n 3 = place a card in a function ");
             switch (chooise) {
                 case 1: // Draw card
                     this.drawCard();
@@ -40,16 +40,20 @@ public class Player {
                 case 3: // Place a card in function
                     
                     break;
+                case 0:
+                    break;
                 default: // Player chooise a worng number. 
                     break;
             }
-            System.out.println("Count is: " + i);
-            System.out.println(other);
+            System.out.println("Board contains " + board.functionCards);
         }
         
     }
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
+        if (card instanceof FunctionCard) {
+            board.addFunctionToBoard((FunctionCard)card);
+        }
         card.execute(1, this, other);
         cards.remove(cardIndex);
     }

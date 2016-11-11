@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 
 public class Game {
-    String currentPlayer;
+    public int currentPlayer;
     public ArrayList<Player> playerList = new ArrayList<>();
     public Board board;
     public CardFactory cardfactory;
@@ -18,6 +18,11 @@ public class Game {
         Player player2 = new Player("Player 2", 50, this.board, this.cardfactory);
         playerList.add(player1);
         playerList.add(player2);
-        playerList.get(0).turn(playerList.get(1));
+        currentPlayer = 0;
+        while(true) {
+            playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
+            currentPlayer = (currentPlayer + 1) % 2;
+            System.out.println(currentPlayer);
+        }
     }
 }
