@@ -2,23 +2,30 @@ import java.util.ArrayList;
 
 public class Player {
     public String name;
+    public Board board;
     public int life;
     public int actionLeft;
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn. 
     public ArrayList<Card> cards;
         
-    Player(String name, int life) {
-        
+    Player(String name, int life, Board board) {
+        this.name = name;
+        this.life = life;
+        this.board = board;
     }
     
-    public void turn() {
-        /*
-       input choise
-                
-       1 == playcard
-       2 == play car to function
-       3 draw card
-       */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+    
+    public void turn(Player other) {
+        //board.onTurnStart(this);
+        for(int i=1; i<4; i++){
+              System.out.println("Count is: " + i);
+              System.out.println(other);
+        }
+        
     }
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
@@ -42,5 +49,6 @@ public class Player {
     }
 
     public void addLife(int amount) {
+        this.life = this.life + amount;
     }
 }
