@@ -4,11 +4,10 @@ public class LineCard extends Card{
         SelfDiscardCard, OtherDiscardCard}
     
     public LineType lineType;
-    String name;
     
-    LineCard(LineType linetype, String name) {
+    LineCard(LineType linetype, String text) {
         this.lineType = lineType;
-        this.name = name;
+        this.text = text;
     }
     
     @Override
