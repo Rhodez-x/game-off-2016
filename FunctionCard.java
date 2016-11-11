@@ -10,4 +10,9 @@ public class FunctionCard extends FlowCard{
     public int execute(Player player, Player other) {
         return super.execute(this.cycles, player, other);
     }
+    
+    @Override
+    public String toString() {
+        return this.text + " " + this.cycles;
+    } 
 }

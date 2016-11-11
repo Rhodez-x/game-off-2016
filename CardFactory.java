@@ -19,7 +19,7 @@ public class CardFactory {
         this.cardPrototypes.add(new RepeatCard("For 0..3 do", 4, 3));
         this.cardPrototypes.add(new RepeatCard("For 0..5 do", 2, 5));
     }
-
+    
     public Card newCard() {
         int frequencySum = 0;
 

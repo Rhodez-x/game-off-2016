@@ -12,6 +12,11 @@ public class LineCard extends Card{
     }
     
     @Override
+    public String toString() {
+        return this.text;
+    } 
+    
+    @Override
     public int execute(int cyclesLeft, Player player, Player other) {
         switch (lineType) {
             case SelfDrawCard:
