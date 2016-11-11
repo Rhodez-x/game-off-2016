@@ -4,6 +4,7 @@ public class Player {
     public String name;
     public int life;
     public int actionLeft;
+    public int discardCount; // The number of card the player has to discard in the satrt of the players turn. 
     public ArrayList<Card> cards;
         
     Player(String name, int life) {
