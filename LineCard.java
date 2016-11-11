@@ -1,12 +1,13 @@
 public class LineCard extends Card{
     public enum LineType {
-        SelfDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
+        SelfDrawCard, OtherDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
         SelfDiscardCard, OtherDiscardCard}
     
     public LineType lineType;
     
-    LineCard(LineType linetype, String text) {
+    LineCard(String text, int frequency, LineType lineType) {
         this.lineType = lineType;
+        this.frequency = frequency;
         this.text = text;
     }
     
@@ -15,6 +16,9 @@ public class LineCard extends Card{
         switch (lineType) {
             case SelfDrawCard:
                 player.drawCard();
+                break;
+            case OtherDrawCard:
+                other.drawCard();
                 break;
             case SelfIncrementLife:
                 player.addLife(1);
