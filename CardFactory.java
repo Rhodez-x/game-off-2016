@@ -10,14 +10,26 @@ public class CardFactory {
         this.cardPrototypes.add(new LineCard("Self.DrawCard()", 4, LineCard.LineType.SelfDrawCard));
         this.cardPrototypes.add(new LineCard("Other.DrawCard()", 4, LineCard.LineType.OtherDrawCard));
 
+        // Increment Life
+        this.cardPrototypes.add(new LineCard("Self.IncrementLife()", 4, LineCard.LineType.SelfIncrementLife));
+        this.cardPrototypes.add(new LineCard("Other.IncrementLife()", 4, LineCard.LineType.OtherIncrementLife));
+
+        // Decrement Life
+        this.cardPrototypes.add(new LineCard("Self.DecrementLife()", 4, LineCard.LineType.SelfDecrementLife));
+        this.cardPrototypes.add(new LineCard("Other.DecrementLife()", 4, LineCard.LineType.OtherDecrementLife));
+
+        // Discard
+        this.cardPrototypes.add(new LineCard("Self.DiscardCard()", 4, LineCard.LineType.SelfDiscardCard));
+        this.cardPrototypes.add(new LineCard("Other.DiscardCard()", 4, LineCard.LineType.OtherDiscardCard));
+
         // Function cards
         this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
         this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
-        this.cardPrototypes.add(new FunctionCard("Function", 1, 25));
+        this.cardPrototypes.add(new FunctionCard("Function", 1, 20));
 
         // Repeat cards
-        this.cardPrototypes.add(new RepeatCard("For 0..3 do", 4, 3));
-        this.cardPrototypes.add(new RepeatCard("For 0..5 do", 2, 5));
+        this.cardPrototypes.add(new RepeatCard("Repeat 3", 3, 3));
+        this.cardPrototypes.add(new RepeatCard("Repeat 5", 1, 5));
     }
     
     public Card newCard() {
