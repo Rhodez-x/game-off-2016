@@ -11,12 +11,12 @@ public class CardFactory {
         this.cardPrototypes.add(new LineCard("Other.DrawCard()", 4, LineCard.LineType.OtherDrawCard));
 
         // Increment Life
-        this.cardPrototypes.add(new LineCard("Self.IncrementLife()", 4, LineCard.LineType.SelfIncrementLife));
-        this.cardPrototypes.add(new LineCard("Other.IncrementLife()", 4, LineCard.LineType.OtherIncrementLife));
+        this.cardPrototypes.add(new LineCard("Self.Life++", 4, LineCard.LineType.SelfIncrementLife));
+        this.cardPrototypes.add(new LineCard("Other.Life++", 4, LineCard.LineType.OtherIncrementLife));
 
         // Decrement Life
-        this.cardPrototypes.add(new LineCard("Self.DecrementLife()", 4, LineCard.LineType.SelfDecrementLife));
-        this.cardPrototypes.add(new LineCard("Other.DecrementLife()", 4, LineCard.LineType.OtherDecrementLife));
+        this.cardPrototypes.add(new LineCard("Self.Life--", 4, LineCard.LineType.SelfDecrementLife));
+        this.cardPrototypes.add(new LineCard("Other.Life--", 4, LineCard.LineType.OtherDecrementLife));
 
         // Discard
         this.cardPrototypes.add(new LineCard("Self.DiscardCard()", 4, LineCard.LineType.SelfDiscardCard));
