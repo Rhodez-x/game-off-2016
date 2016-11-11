@@ -1,8 +1,14 @@
+import java.util.ArrayList;
+
 public class CardFactory {
-    Board myboard;
-    cardProtoypes
+    Board board;
+    ArrayList<Card> cardPrototypes;
     
     CardFactory() {
         
+    }
+
+    public Card newCard() {
+        return null;
     }
 }
