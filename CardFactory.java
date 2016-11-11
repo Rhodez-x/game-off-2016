@@ -8,7 +8,7 @@ public class CardFactory {
     CardFactory() {
         
     }
-
+    
     public Card newCard() {
         int frequencySum = 0;
 

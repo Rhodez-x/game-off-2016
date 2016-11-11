@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Player {
     public String name;
@@ -7,12 +6,14 @@ public class Player {
     public int life;
     public int actionLeft;
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn. 
-    public ArrayList<Card> cards;
+    public CardFactory cardFactory;
+    public ArrayList<Card> cards = new ArrayList<>();
         
-    Player(String name, int life, Board board) {
+    Player(String name, int life, Board board, CardFactory cardFactory) {
         this.name = name;
         this.life = life;
         this.board = board;
+        this.cardFactory = cardFactory;
     }
     
     @Override
@@ -64,6 +65,7 @@ public class Player {
 
     public void drawCard() {
         System.out.println("You got a card");
+        this.cards.add(cardFactory.newCard());
     }
 
     public void addLife(int amount) {
