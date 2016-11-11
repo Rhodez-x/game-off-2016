@@ -40,6 +40,8 @@ public class Player {
                 case 3: // Place a card in function
                     
                     break;
+                case 0:
+                    break;
                 default: // Player chooise a worng number. 
                     break;
             }
