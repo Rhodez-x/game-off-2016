@@ -5,6 +5,11 @@ public class LineCard extends Card{
     
     public LineType lineType;
     
+    LineCard(LineType linetype, String text) {
+        this.lineType = lineType;
+        this.text = text;
+    }
+    
     @Override
     public int execute(int cyclesLeft, Player player, Player other) {
         switch (lineType) {

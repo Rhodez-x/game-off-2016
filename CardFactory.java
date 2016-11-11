@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class CardFactory {
     Board board;
-    ArrayList<Card> cardPrototypes;
+    ArrayList<Card> cardPrototypes = new ArrayList<>();
     
     CardFactory() {
         
