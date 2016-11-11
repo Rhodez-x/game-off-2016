@@ -26,6 +26,10 @@ public class CardFactory {
         this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.SelfExecuteFunction));
         this.cardPrototypes.add(new LineCard("Execute Function", 3, LineCard.LineType.OtherExecuteFunction));
 
+        // Function Cycles
+        this.cardPrototypes.add(new LineCard("Function.Cycles++", 4, LineCard.LineType.CyclesIncrement));
+        this.cardPrototypes.add(new LineCard("Function.Cycles--", 3, LineCard.LineType.CyclesDecrement));
+
         // Function cards
         this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
         this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
@@ -34,6 +38,12 @@ public class CardFactory {
         // Repeat cards
         this.cardPrototypes.add(new RepeatCard("Repeat 3", 3, 3));
         this.cardPrototypes.add(new RepeatCard("Repeat 5", 1, 5));
+
+        // Event cards
+        this.cardPrototypes.add(new EventCard("OnTurnStart()", 2, 15, Board.EventType.OnTurnStart));
+        this.cardPrototypes.add(new EventCard("OnTurnEnd()", 2, 15, Board.EventType.OnTurnEnd));
+        this.cardPrototypes.add(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
+        this.cardPrototypes.add(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
     }
     
     public Card newCard() {

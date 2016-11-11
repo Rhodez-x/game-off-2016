@@ -1,7 +1,7 @@
 public class LineCard extends Card{
     public enum LineType {
         SelfDrawCard, OtherDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
-        SelfDiscardCard, OtherDiscardCard, SelfExecuteFunction, OtherExecuteFunction}
+        SelfDiscardCard, OtherDiscardCard, SelfExecuteFunction, OtherExecuteFunction, CyclesIncrement, CyclesDecrement}
     
     public LineType lineType;
     
@@ -45,6 +45,13 @@ public class LineCard extends Card{
                 break;
             case SelfExecuteFunction:
                 player.executeFunction(other);
+                break;
+            case CyclesIncrement:
+                cyclesLeft++;
+                break;
+            case CyclesDecrement:
+                cyclesLeft--;
+                break;
             default:
                 break;
         }
