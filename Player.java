@@ -11,26 +11,36 @@ public class Player {
         
     }
     
-    public int void turn() {
-        
+    public void turn() {
+        /*
        input choise
                 
        1 == playcard
        2 == play car to function
        3 draw card
-        
+       */
     }
-    void playCard() { // Directplay (not lay card in a function on the table)
-        line.execute
-        remove card from hand
+    void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
+        Card card = cards.get(cardIndex);
+        card.execute(1, this, other);
+
+        cards.remove(cardIndex);
     }
     
     void playCardToFunction() { // Player lay a card to a function
+        /*
         Spørg spiller vælge et kort. 
         sender et kort til board
+        */
     }
     
-    void discardCard() {
+    public void discardCard() {
         
+    }
+
+    public void drawCard() {
+    }
+
+    public void addLife(int amount) {
     }
 }
