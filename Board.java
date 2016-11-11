@@ -13,39 +13,43 @@ public class Board {
         }
     }
     
-    void addCardToFuction(Card card, int functionIndex, int placeIndex) {
+    public void addCardToFuction(Card card, int functionIndex, int placeIndex) {
         
     }
 
-    public void OnTurnStart(Player player, Player other) {
-        FunctionCard functionCard = eventFunctions.get(EventType.OnTurnStart);
+    public void executeFunction(int functionIndex, Player target, Player other) {
+        int cycles = functionCards.get(functionIndex).execute(target, other);
+
+        if (cycles < 1) {
+            functionCards.remove(functionIndex);
+        }
+    }
+
+    private void executeEvent(EventType eventType, Player target, Player other) {
+        FunctionCard functionCard = eventFunctions.get(eventType);
 
         if (functionCard != null) {
-            functionCard.execute(player, player);
+            int cycles = functionCard.execute(target, other);
+
+            if (cycles < 1) {
+                eventFunctions.remove(eventType);
+            }
         }
+    }
+
+    public void OnTurnStart(Player player, Player other) {
+        executeEvent(EventType.OnTurnStart, player, other);
     }
 
     public void OnTurnEnd(Player player, Player other) {
-        FunctionCard functionCard = eventFunctions.get(EventType.OnTurnEnd);
-
-        if (functionCard != null) {
-            functionCard.execute(player, player);
-        }
+        executeEvent(EventType.OnTurnEnd, player, other);
     }
 
     public void OnCardPlayed(Player player, Player other) {
-        FunctionCard functionCard = eventFunctions.get(EventType.OnCardPlayed);
-
-        if (functionCard != null) {
-            functionCard.execute(player, player);
-        }
+        executeEvent(EventType.OnCardPlayed, player, other);
     }
 
     public void OnCardDraw(Player player, Player other) {
-        FunctionCard functionCard = eventFunctions.get(EventType.OnCardDraw);
-
-        if (functionCard != null) {
-            functionCard.execute(player, player);
-        }
+        executeEvent(EventType.OnCardDraw, player, other);
     }
 }

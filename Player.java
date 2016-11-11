@@ -40,6 +40,8 @@ public class Player {
                 case 3: // Place a card in function
                     
                     break;
+                case 0:
+                    break;
                 default: // Player chooise a worng number. 
                     break;
             }
@@ -78,5 +80,12 @@ public class Player {
 
     public void addLife(int amount) {
         this.life = this.life + amount;
+    }
+
+    public void executeFunction(Player other) {
+        // Get function to execute
+        int functionToExecute = 0;
+
+        board.executeFunction(functionToExecute, this, other);
     }
 }
