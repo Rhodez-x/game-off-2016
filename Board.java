@@ -4,13 +4,17 @@ import java.util.HashMap;
 public class Board {
     public enum EventType {OnTurnStart, OnTurnEnd, OnCardPlayed, OnCardDraw}
 
-    ArrayList<FunctionCard> functionCards;
+    ArrayList<FunctionCard> functionCards = new ArrayList<>();
     HashMap<EventType, FunctionCard> eventFunctions = new HashMap<>();
     
     Board() {
         for (EventType eventType : EventType.values()) {
             eventFunctions.put(eventType, null);
         }
+    }
+    
+    public void addFunctionToBoard(FunctionCard card) {
+        functionCards.add(card);
     }
     
     public void addCardToFuction(Card card, int functionIndex, int placeIndex) {
