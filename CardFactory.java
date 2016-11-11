@@ -22,6 +22,10 @@ public class CardFactory {
         this.cardPrototypes.add(new LineCard("Self.DiscardCard()", 4, LineCard.LineType.SelfDiscardCard));
         this.cardPrototypes.add(new LineCard("Other.DiscardCard()", 4, LineCard.LineType.OtherDiscardCard));
 
+        // Function Executing
+        this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.SelfExecuteFunction));
+        //this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.OtherExecuteFunction));
+
         // Function cards
         this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
         this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
