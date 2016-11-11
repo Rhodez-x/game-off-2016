@@ -43,6 +43,8 @@ public class LineCard extends Card{
             case OtherDiscardCard:
                 other.discardCard();
                 break;
+            case SelfExecuteFunction:
+                player.executeFunction(other);
             default:
                 break;
         }
