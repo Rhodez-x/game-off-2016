@@ -32,7 +32,10 @@ public class Player {
                     this.drawCard();
                     break;            
                 case 2:// Play a card, diretcly 
-                    
+                    System.out.println("Witch card do you want to play?" + this.cards);
+                    chooise = sc.nextInt();
+                    System.out.println("You played this card" + this.cards.get(chooise));
+                    this.playCard(chooise, other);
                     break;
                 case 3: // Place a card in function
                     
@@ -48,7 +51,6 @@ public class Player {
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
         card.execute(1, this, other);
-
         cards.remove(cardIndex);
     }
     
@@ -66,6 +68,7 @@ public class Player {
     public void drawCard() {
         System.out.println("You got a card");
         this.cards.add(cardFactory.newCard());
+        System.out.println("You cards are now " + this.cards);
         /*
         debug line, print 19 cards
         for(int i=1; i<20; i++){
