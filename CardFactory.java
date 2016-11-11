@@ -47,9 +47,21 @@ public class CardFactory {
     }
     
     public Card newCard() {
-        int frequencySum = 0;
+        ArrayList<Card> cards = new ArrayList<>();
 
         for (Card card : this.cardPrototypes) {
+            if (card instanceof EventCard) {
+                if (board.cardsInPlay.contains(card)) {
+                    continue;
+                }
+            }
+
+            cards.add(card);
+        }
+
+        int frequencySum = 0;
+
+        for (Card card : cards) {
             frequencySum += card.frequency;
         }
 
@@ -57,7 +69,7 @@ public class CardFactory {
 
         int randomNumber = rng.nextInt(frequencySum);
 
-        for (Card card : this.cardPrototypes) {
+        for (Card card : cards) {
             if (randomNumber < card.frequency) {
                 return card;
             }

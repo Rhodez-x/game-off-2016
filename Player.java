@@ -5,15 +5,13 @@ public class Player {
     public Board board;
     public int life;
     public int actionLeft;
-    public int discardCount; // The number of card the player has to discard in the satrt of the players turn. 
-    public CardFactory cardFactory;
+    public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
         
-    Player(String name, int life, Board board, CardFactory cardFactory) {
+    Player(String name, int life, Board board) {
         this.name = name;
         this.life = life;
         this.board = board;
-        this.cardFactory = cardFactory;
     }
     
     @Override
@@ -55,7 +53,8 @@ public class Player {
             board.addFunctionToBoard((FunctionCard)card);
         }
         card.execute(1, this, other);
-        cards.remove(cardIndex);
+
+        removeCard(card);
     }
     
     void playCardToFunction() { // Player lay a card to a function
@@ -65,13 +64,13 @@ public class Player {
         */
     }
     
-    public void discardCard() {
-        
+    public void discardCard(int cardIndex) {
+        removeCard(cardIndex);
     }
 
     public void drawCard() {
         System.out.println("You got a card");
-        this.cards.add(cardFactory.newCard());
+        this.cards.add(board.addCard());
         System.out.println("You cards are now " + this.cards);
         /*
         debug line, print 19 cards
@@ -80,8 +79,18 @@ public class Player {
         }*/ 
     }
 
+    public void removeCard(Card card) {
+        cards.remove(card);
+        board.removeCard(card);
+    }
+
+    public void removeCard(int cardIndex) {
+        Card card = cards.get(cardIndex);
+        removeCard(card);
+    }
+
     public void addLife(int amount) {
-        this.life = this.life + amount;
+        this.life += amount;
     }
 
     public void executeFunction(Player other) {

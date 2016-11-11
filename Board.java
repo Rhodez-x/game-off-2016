@@ -4,10 +4,19 @@ import java.util.HashMap;
 public class Board {
     public enum EventType {OnTurnStart, OnTurnEnd, OnCardPlayed, OnCardDraw}
 
+    CardFactory cardFactory;
+
     ArrayList<FunctionCard> functionCards = new ArrayList<>();
+
+    ArrayList<Card> cardsInPlay = new ArrayList<>();
     //HashMap<EventType, FunctionCard> eventFunctions = new HashMap<>();
-    
+
     Board() {
+        this.cardFactory = new CardFactory();
+    }
+    
+    Board(CardFactory cardFactory) {
+        this.cardFactory = cardFactory;
         /*for (EventType eventType : EventType.values()) {
             eventFunctions.put(eventType, null);
         }*/
@@ -42,6 +51,17 @@ public class Board {
         if (eventIndex > 0) {
             executeFunction(eventIndex, target, other);
         }
+    }
+
+    public Card addCard() {
+        Card newCard = cardFactory.newCard();
+        cardsInPlay.add(newCard);
+
+        return newCard;
+    }
+
+    public void removeCard(Card card) {
+        cardsInPlay.remove(card);
     }
 
     public void OnTurnStart(Player player, Player other) {
