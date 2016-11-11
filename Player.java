@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Player {
     public String name;
@@ -22,8 +23,24 @@ public class Player {
     public void turn(Player other) {
         //board.onTurnStart(this);
         for(int i=1; i<4; i++){
-              System.out.println("Count is: " + i);
-              System.out.println(other);
+            Scanner sc = new Scanner(System.in);
+            int chooise = sc.nextInt();
+            System.out.println("Choose what to do. \n 1 = Draw card \n 2 = Play card directly \n 3 = place a card in a function ");
+            switch (chooise) {
+                case 1: // Draw card
+                    
+                    break;            
+                case 2:// Play a card, diretcly 
+                    
+                    break;
+                case 3: // Place a card in function
+                    
+                    break;
+                default: // Player chooise a worng number. 
+                    break;
+            }
+            System.out.println("Count is: " + i);
+            System.out.println(other);
         }
         
     }
