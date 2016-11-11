@@ -28,7 +28,7 @@ public class Player {
             System.out.println("Choose what to do. \n 1 = Draw card \n 2 = Play card directly \n 3 = place a card in a function ");
             switch (chooise) {
                 case 1: // Draw card
-                    
+                    this.drawCard();
                     break;            
                 case 2:// Play a card, diretcly 
                     
@@ -63,6 +63,7 @@ public class Player {
     }
 
     public void drawCard() {
+        System.out.println("You got a card");
     }
 
     public void addLife(int amount) {

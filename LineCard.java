@@ -4,6 +4,12 @@ public class LineCard extends Card{
         SelfDiscardCard, OtherDiscardCard}
     
     public LineType lineType;
+    String name;
+    
+    LineCard(LineType linetype, String name) {
+        this.lineType = lineType;
+        this.name = name;
+    }
     
     @Override
     public int execute(int cyclesLeft, Player player, Player other) {
