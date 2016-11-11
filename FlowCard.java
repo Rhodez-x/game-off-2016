@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class FlowCard extends Card{
 
-    ArrayList<Card> cards;
+    ArrayList<Card> cards = new ArrayList<>();
 
     @Override
     public int execute(int cycles, Player player, Player other) {
