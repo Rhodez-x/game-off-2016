@@ -1,7 +1,7 @@
 public class LineCard extends Card{
     public enum LineType {
         SelfDrawCard, OtherDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
-        SelfDiscardCard, OtherDiscardCard}
+        SelfDiscardCard, OtherDiscardCard, SelfExecuteFunction, OtherExecuteFunction}
     
     public LineType lineType;
     
