@@ -11,8 +11,8 @@ public class CodeOfCards extends PApplet {
 	}
 	
 	public void setup() {
-//            game = new Game();
-//            game.runGame(); // Starts the program.
+            game = new Game();
+            game.runGame(); // Starts the program.
 	}
 	
 	public void draw() {

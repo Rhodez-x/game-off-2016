@@ -66,6 +66,11 @@ public class Player {
     public void drawCard() {
         System.out.println("You got a card");
         this.cards.add(cardFactory.newCard());
+        /*
+        debug line, print 19 cards
+        for(int i=1; i<20; i++){
+            System.out.println(cardFactory.newCard());
+        }*/ 
     }
 
     public void addLife(int amount) {
