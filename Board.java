@@ -5,4 +5,8 @@ public class Board {
         
     }
     
+    void addCardToFuction(Card card, int functionIndex, int placeIndex) {
+        
+    }
+    
 }
