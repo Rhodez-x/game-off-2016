@@ -5,16 +5,20 @@ public class FlowCard extends Card{
     ArrayList<Card> cards;
 
     @Override
-    public int execute(int cyclesLeft) {
-        for (Card card : cards) {
+    public int execute(int cycles, Player player, Player other) {
+        for (Card card : this.cards) {
             if (cycles < 1) {
                 break;
             }
 
-            cycles = card.execute(cycles);
+            cycles = card.execute(cycles, player, other);
         }
 
         return cycles;
+    }
+
+    public int execute(Player player, Player other) {
+        return execute(this.cycles, player, other);
     }
     
 }
