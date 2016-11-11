@@ -16,4 +16,9 @@ public class FlowCard extends Card{
 
         return cycles;
     }
+    
+    @Override
+    public String toString() {
+        return this.text;
+    } 
 }
