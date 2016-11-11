@@ -24,7 +24,7 @@ public class CardFactory {
 
         // Function Executing
         this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.SelfExecuteFunction));
-        //this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.OtherExecuteFunction));
+        this.cardPrototypes.add(new LineCard("Execute Function", 3, LineCard.LineType.OtherExecuteFunction));
 
         // Function cards
         this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
