@@ -1,5 +1,7 @@
+import java.util.ArrayList;
+
 public class Board {
-    functionCards
+    ArrayList<FunctionCard> functionCards;
     
     Board() {
         
