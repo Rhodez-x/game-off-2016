@@ -5,20 +5,20 @@ public class Board {
     public enum EventType {OnTurnStart, OnTurnEnd, OnCardPlayed, OnCardDraw}
 
     ArrayList<FunctionCard> functionCards = new ArrayList<>();
-    HashMap<EventType, FunctionCard> eventFunctions = new HashMap<>();
+    //HashMap<EventType, FunctionCard> eventFunctions = new HashMap<>();
     
     Board() {
-        for (EventType eventType : EventType.values()) {
+        /*for (EventType eventType : EventType.values()) {
             eventFunctions.put(eventType, null);
-        }
+        }*/
     }
     
     public void addFunctionToBoard(FunctionCard card) {
         functionCards.add(card);
     }
     
-    public void addCardToFuction(Card card, int functionIndex, int placeIndex) {
-        
+    public void addCardToFuction(Card card, int functionIndex, int index) {
+        functionCards.get(functionIndex).addCard(card, index);
     }
 
     public void executeFunction(int functionIndex, Player target, Player other) {
@@ -30,14 +30,17 @@ public class Board {
     }
 
     private void executeEvent(EventType eventType, Player target, Player other) {
-        FunctionCard functionCard = eventFunctions.get(eventType);
+        int eventIndex = -1;
 
-        if (functionCard != null) {
-            int cycles = functionCard.execute(target, other);
-
-            if (cycles < 1) {
-                eventFunctions.remove(eventType);
+        for (FunctionCard card : functionCards) {
+            if (card instanceof EventCard && ((EventCard) card).eventType == eventType) {
+                eventIndex = functionCards.indexOf(card);
+                break;
             }
+        }
+
+        if (eventIndex > 0) {
+            executeFunction(eventIndex, target, other);
         }
     }
 

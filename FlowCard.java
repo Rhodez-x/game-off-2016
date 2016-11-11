@@ -16,6 +16,10 @@ public class FlowCard extends Card{
 
         return cycles;
     }
+
+    public void addCard(Card card, int index) {
+        cards.add(index, card);
+    }
     
     @Override
     public String toString() {
