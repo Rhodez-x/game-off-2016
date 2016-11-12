@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 public class RepeatCard extends FlowCard{
     public int times;
 

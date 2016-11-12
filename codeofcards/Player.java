@@ -1,6 +1,12 @@
+package codeofcards;
+
+import codeofcards.cards.Card;
+import codeofcards.cards.FunctionCard;
+
 import java.util.*;
 
 public class Player {
+    public int id;
     public String name;
     public Board board;
     public int life;
@@ -8,7 +14,8 @@ public class Player {
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
         
-    Player(String name, int life, Board board) {
+    Player(int id, String name, int life, Board board) {
+        this.id = id;
         this.name = name;
         this.life = life;
         this.board = board;
@@ -40,10 +47,10 @@ public class Player {
                     break;
                 case 0:
                     break;
-                default: // Player chooise a worng number. 
+                default: // CodeOfCards.Player chooise a worng number.
                     break;
             }
-            System.out.println("Board contains " + board.functionCards);
+            System.out.println("CodeOfCards.Board contains " + board.functionCards);
         }
         
     }
@@ -57,7 +64,7 @@ public class Player {
         removeCard(card);
     }
     
-    void playCardToFunction() { // Player lay a card to a function
+    void playCardToFunction() { // CodeOfCards.Player lay a card to a function
         /*
         Spørg spiller vælge et kort. 
         sender et kort til board
@@ -77,6 +84,10 @@ public class Player {
         for(int i=1; i<20; i++){
             System.out.println(cardFactory.newCard());
         }*/ 
+    }
+
+    public void giveCard(Card card) {
+        this.cards.add(card);
     }
 
     public void removeCard(Card card) {

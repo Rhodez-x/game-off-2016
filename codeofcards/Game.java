@@ -1,3 +1,4 @@
+package codeofcards;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,15 @@ public class Game {
     public Game() {
         this.board = new Board();
     }
+
+    public void hostGame() {
+
+    }
     
     public void runGame() {
         System.out.println("Welcome to the game.");
-        Player player1 = new Player("Player 1", 50, this.board);
-        Player player2 = new Player("Player 2", 50, this.board);
+        Player player1 = new Player(0, "CodeOfCards.Player 1", 50, this.board);
+        Player player2 = new Player(1, "CodeOfCards.Player 2", 50, this.board);
         playerList.add(player1);
         playerList.add(player2);
         currentPlayer = 0;

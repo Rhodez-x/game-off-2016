@@ -1,4 +1,8 @@
-public class LineCard extends Card{
+package codeofcards;
+
+import codeofcards.cards.Card;
+
+public class LineCard extends Card {
     public enum LineType {
         SelfDrawCard, OtherDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
         SelfDiscardCard, OtherDiscardCard, SelfExecuteFunction, OtherExecuteFunction, CyclesIncrement, CyclesDecrement}

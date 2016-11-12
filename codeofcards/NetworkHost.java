@@ -1,8 +1,9 @@
+package codeofcards;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import static java.sql.DriverManager.println;
 import java.util.Scanner;
 public class NetworkHost {
     

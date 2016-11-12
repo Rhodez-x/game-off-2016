@@ -1,5 +1,10 @@
+package codeofcards;
+
+import codeofcards.cards.Card;
+import codeofcards.cards.EventCard;
+import codeofcards.cards.FunctionCard;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Board {
     public enum EventType {OnTurnStart, OnTurnEnd, OnCardPlayed, OnCardDraw}
@@ -9,7 +14,7 @@ public class Board {
     ArrayList<FunctionCard> functionCards = new ArrayList<>();
 
     ArrayList<Card> cardsInPlay = new ArrayList<>();
-    //HashMap<EventType, FunctionCard> eventFunctions = new HashMap<>();
+    //HashMap<EventType, CodeOfCards.FunctionCard> eventFunctions = new HashMap<>();
 
     Board() {
         this.cardFactory = new CardFactory();
@@ -53,11 +58,8 @@ public class Board {
         }
     }
 
-    public Card addCard() {
-        Card newCard = cardFactory.newCard();
-        cardsInPlay.add(newCard);
-
-        return newCard;
+    public void addCard(Card card) {
+        cardsInPlay.add(card);
     }
 
     public void removeCard(Card card) {

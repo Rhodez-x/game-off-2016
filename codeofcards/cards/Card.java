@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 public abstract class Card {
     public String text;
     public float frequency;

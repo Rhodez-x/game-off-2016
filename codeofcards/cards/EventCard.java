@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Board;
+
 /**
  * Created by mads on 11/11/2016.
  */

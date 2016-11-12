@@ -1,3 +1,10 @@
+package codeofcards;
+
+import codeofcards.cards.Card;
+import codeofcards.cards.EventCard;
+import codeofcards.cards.FunctionCard;
+import codeofcards.cards.RepeatCard;
+
 import java.util.ArrayList;
 import java.util.Random;
 

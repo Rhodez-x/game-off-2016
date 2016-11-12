@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 import java.util.ArrayList;
 
 public class FlowCard extends Card{

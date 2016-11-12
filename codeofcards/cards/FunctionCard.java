@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 public class FunctionCard extends FlowCard{
     int cycles; // How many times the function can be called.
 
