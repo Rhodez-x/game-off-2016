@@ -29,4 +29,8 @@ public class Game {
             System.out.println(currentPlayer);
         }
     }
+
+    public Player getPlayer(int playerId) {
+        return playerList.get(playerId);
+    }
 }

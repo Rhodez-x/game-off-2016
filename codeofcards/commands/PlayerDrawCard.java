@@ -1,5 +1,7 @@
-package codeofcards;
+package codeofcards.commands;
 
+import codeofcards.CardFactory;
+import codeofcards.Game;
 import codeofcards.cards.Card;
 import codeofcards.commands.Command;
 
