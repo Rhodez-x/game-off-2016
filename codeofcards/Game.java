@@ -1,6 +1,8 @@
 package codeofcards;
 
+import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
+import codeofcards.commands.DrawCommand;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -50,8 +52,15 @@ public class Game {
         System.out.println("Welcome to the game.");
         Player player1 = new Player(0, "Monty Python", 50, this);
         Player player2 = new Player(1, "Marilyn Monroe", 50, this);
+
         playerList.add(player1);
         playerList.add(player2);
+
+        for (int i = 0; i < 5; i++) {
+            execute(new DrawCommand(player1.id));
+            execute(new DrawCommand(player2.id));
+        }
+
         currentPlayer = 0;
         while(true) {
             playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
