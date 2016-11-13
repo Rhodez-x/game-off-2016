@@ -2,6 +2,8 @@ package codeofcards;
 
 import codeofcards.cards.Card;
 import codeofcards.cards.FunctionCard;
+import codeofcards.commands.Command;
+import codeofcards.commands.DrawCommand;
 
 import java.util.*;
 
@@ -34,7 +36,7 @@ public class Player {
             int chooise = sc.nextInt();
             switch (chooise) {
                 case 1: // Draw card
-                    this.drawCard();
+                    Game.instance.execute(new DrawCommand(id));
                     break;            
                 case 2:// Play a card, diretcly 
                     System.out.println("Witch card do you want to play?" + this.cards);
@@ -75,7 +77,7 @@ public class Player {
         removeCard(cardIndex);
     }
 
-    public void drawCard() {
+    /*public void drawCard() {
         System.out.println("You got a card");
         this.cards.add(board.addCard());
         System.out.println("You cards are now " + this.cards);
@@ -83,8 +85,8 @@ public class Player {
         debug line, print 19 cards
         for(int i=1; i<20; i++){
             System.out.println(cardFactory.newCard());
-        }*/ 
-    }
+        }*/ /*
+    }*/
 
     public void giveCard(Card card) {
         this.cards.add(card);

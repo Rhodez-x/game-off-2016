@@ -5,7 +5,7 @@ import codeofcards.Player;
 public class FunctionCard extends FlowCard{
     int cycles; // How many times the function can be called.
 
-    FunctionCard(String text, int frequency, int cycles) {
+    public FunctionCard(String text, int frequency, int cycles) {
         this.text = text;
         this.frequency = frequency;
         this.cycles = cycles;
@@ -18,5 +18,11 @@ public class FunctionCard extends FlowCard{
     @Override
     public String toString() {
         return this.text + " " + this.cycles;
-    } 
+    }
+
+    public int addCycles(int amount) {
+        cycles += amount;
+
+        return cycles;
+    }
 }

@@ -1,22 +1,40 @@
 package codeofcards;
 
+import codeofcards.commands.Command;
+
 import java.util.ArrayList;
 
 public class Game {
+    // Singleton :/
+    public static Game instance;
+
     public int currentPlayer;
     public ArrayList<Player> playerList = new ArrayList<>();
     public Board board;
     public CardFactory cardfactory;
+
+    public boolean isHost = true;
+
+    public ArrayList<Command> commandQueue = new ArrayList<>();
     
     public Game() {
         this.board = new Board();
+        this.cardfactory = board.cardFactory;
+    }
+
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.hostGame();
     }
 
     public void hostGame() {
-
+        isHost = true;
+        runGame();
     }
     
     public void runGame() {
+        instance = this;
+
         System.out.println("Welcome to the game.");
         Player player1 = new Player(0, "CodeOfCards.Player 1", 50, this.board);
         Player player2 = new Player(1, "CodeOfCards.Player 2", 50, this.board);
@@ -32,5 +50,18 @@ public class Game {
 
     public Player getPlayer(int playerId) {
         return playerList.get(playerId);
+    }
+
+    public void execute(Command command) {
+        commandQueue.add(command);
+        command.execute(this);
+
+        // Send command to other client
+    }
+
+    public void serverExecute(Command command) {
+        if (isHost) {
+            command.execute(this);
+        }
     }
 }

@@ -3,6 +3,7 @@ package codeofcards;
 import codeofcards.cards.Card;
 import codeofcards.cards.EventCard;
 import codeofcards.cards.FunctionCard;
+import codeofcards.cards.LineCard;
 
 import java.util.ArrayList;
 
@@ -17,22 +18,37 @@ public class Board {
     //HashMap<EventType, CodeOfCards.FunctionCard> eventFunctions = new HashMap<>();
 
     Board() {
-        this.cardFactory = new CardFactory();
+        this.cardFactory = new CardFactory(this);
     }
-    
+
     Board(CardFactory cardFactory) {
         this.cardFactory = cardFactory;
         /*for (EventType eventType : EventType.values()) {
             eventFunctions.put(eventType, null);
         }*/
     }
-    
+
     public void addFunctionToBoard(FunctionCard card) {
         functionCards.add(card);
     }
-    
-    public void addCardToFuction(Card card, int functionIndex, int index) {
-        functionCards.get(functionIndex).addCard(card, index);
+
+    public void addFunctionToBoard(FunctionCard card, int index) {
+        functionCards.add(index, card);
+    }
+
+    public void addCyclesToFunction(int functionIndex, int amount) {
+        functionCards.get(functionIndex).addCycles(amount);
+    }
+
+    public boolean addCardToFuction(Card card, int functionIndex, int index) {
+        if (card instanceof LineCard &&
+                ((((LineCard) card).lineType != LineCard.LineType.SelfExecuteFunction)
+                || (((LineCard) card).lineType != LineCard.LineType.OtherExecuteFunction))) {
+            functionCards.get(functionIndex).addCard(card, index);
+            return true;
+        }
+
+        return false;
     }
 
     public void executeFunction(int functionIndex, Player target, Player other) {

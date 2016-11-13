@@ -2,11 +2,11 @@ package codeofcards.commands;
 
 import codeofcards.Game;
 
-public class PlayerLifeChangeCommand extends Command {
+public class LifeAddCommand extends Command {
     public int targetId;
     public int amount;
 
-    public PlayerLifeChangeCommand(int targetId, int amount) {
+    public LifeAddCommand(int targetId, int amount) {
         this.targetId = targetId;
         this.amount = amount;
     }

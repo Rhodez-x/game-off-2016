@@ -1,9 +1,6 @@
 package codeofcards;
 
-import codeofcards.cards.Card;
-import codeofcards.cards.EventCard;
-import codeofcards.cards.FunctionCard;
-import codeofcards.cards.RepeatCard;
+import codeofcards.cards.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,7 +9,9 @@ public class CardFactory {
     Board board;
     ArrayList<Card> cardPrototypes = new ArrayList<>();
     
-    CardFactory() {
+    CardFactory(Board board) {
+        this.board = board;
+
         // Draw Cards
         this.cardPrototypes.add(new LineCard("Self.DrawCard()", 4, LineCard.LineType.SelfDrawCard));
         this.cardPrototypes.add(new LineCard("Other.DrawCard()", 4, LineCard.LineType.OtherDrawCard));

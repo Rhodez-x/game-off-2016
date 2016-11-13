@@ -54,6 +54,6 @@ public class CodeOfCards extends PApplet {
 	}
 
     public static void main(String[] args){
-    	PApplet.main("codeofcards");
+    	PApplet.main("codeofcards.CodeOfCards");
     }
 }

@@ -1,6 +1,11 @@
-package codeofcards;
+package codeofcards.cards;
 
-import codeofcards.cards.Card;
+import codeofcards.Game;
+import codeofcards.Player;
+import codeofcards.commands.Command;
+import codeofcards.commands.CyclesAddCommand;
+import codeofcards.commands.DrawCommand;
+import codeofcards.commands.LifeAddCommand;
 
 public class LineCard extends Card {
     public enum LineType {
@@ -9,7 +14,7 @@ public class LineCard extends Card {
     
     public LineType lineType;
     
-    LineCard(String text, int frequency, LineType lineType) {
+    public LineCard(String text, int frequency, LineType lineType) {
         this.lineType = lineType;
         this.frequency = frequency;
         this.text = text;
@@ -22,44 +27,49 @@ public class LineCard extends Card {
     
     @Override
     public int execute(int cyclesLeft, Player player, Player other) {
+        Command command = null;
+
         switch (lineType) {
             case SelfDrawCard:
-                player.drawCard();
+                command = new DrawCommand(player.id);
                 break;
             case OtherDrawCard:
-                other.drawCard();
+                command = new DrawCommand(other.id);
                 break;
             case SelfIncrementLife:
-                player.addLife(1);
+                command = new LifeAddCommand(player.id, 1);
                 break;
             case SelfDecrementLife:
-                player.addLife(-1);
+                command = new LifeAddCommand(player.id, -1);
                 break;
             case OtherIncrementLife:
-                other.addLife(1);
+                command = new LifeAddCommand(other.id, 1);
                 break;
             case OtherDecrementLife:
-                other.addLife(-1);
+                command = new LifeAddCommand(other.id, -1);
                 break;
             case SelfDiscardCard:
-                player.discardCard();
+                //player.discardCard();
                 break;
             case OtherDiscardCard:
-                other.discardCard();
+                //other.discardCard();
                 break;
             case SelfExecuteFunction:
-                player.executeFunction(other);
+                //player.executeFunction(other);
                 break;
             case CyclesIncrement:
-                cyclesLeft++;
+                //command = new CyclesAddCommand(this.id, 1);
                 break;
             case CyclesDecrement:
-                cyclesLeft--;
+                //command = new CyclesAddCommand(this.id, -1);
                 break;
             default:
                 break;
         }
 
-        return cyclesLeft - 1;
+        Game.instance.execute(command);
+        //game.execute(new CyclesAddCommand(this.id, 1));
+
+        return cyclesLeft;
     }
 }
