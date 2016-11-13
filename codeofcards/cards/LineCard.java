@@ -64,9 +64,11 @@ public class LineCard extends Card {
                 break;
         }
 
-        Game.instance.execute(command);
+        if (command != null) {
+            Game.instance.execute(command);
+        }
 
-        return cyclesLeft;
+        return cyclesLeft - 1;
     }
 
     @Override

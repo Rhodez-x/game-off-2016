@@ -12,7 +12,8 @@ public class FunctionCard extends FlowCard{
     }
 
     public int execute(Player player, Player other) {
-        return super.execute(this.cycles, player, other);
+        this.cycles = super.execute(this.cycles, player, other);
+        return this.cycles;
     }
     
     @Override
