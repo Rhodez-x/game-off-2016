@@ -35,14 +35,15 @@ public class Player {
         int actionsDone = 0;
 
         while(actionsDone < 3){
-            System.out.format("Player 0: %2d | Player 1: %2d\n", life, other.life);
+            System.out.format("%s: %2d | %s: %2d\n", name, life, other.name, other.life);
 
             System.out.println("Board:");
             for (int j = 0; j < board.functionCards.size(); j++) {
                 System.out.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
             }
 
-            System.out.println("\nChoose what to do\n1: Draw | 2: Play Card | 3: Place card in function ");
+            System.out.println("\nChoose what to do, " + name);
+            System.out.println("1: Draw | 2: Play Card | 3: Place card in function ");
             System.out.println("Your hand: " + this.cards);
 
             int choice;
