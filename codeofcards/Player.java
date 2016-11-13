@@ -40,7 +40,7 @@ public class Player {
 
             System.out.println("Board:");
             for (int j = 0; j < board.functionCards.size(); j++) {
-                System.out.format("%s: %-20s -> %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
+                System.out.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
             }
 
             System.out.println("\nChoose what to do\n1: Draw | 2: Play Card | 3: Place card in function ");

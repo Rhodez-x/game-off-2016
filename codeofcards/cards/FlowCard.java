@@ -27,6 +27,6 @@ public class FlowCard extends Card{
     
     @Override
     public String toString() {
-        return this.text;
+        return text + " -> " + cards.toString();
     } 
 }

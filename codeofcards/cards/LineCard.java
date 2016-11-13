@@ -2,10 +2,7 @@ package codeofcards.cards;
 
 import codeofcards.Game;
 import codeofcards.Player;
-import codeofcards.commands.Command;
-import codeofcards.commands.CyclesAddCommand;
-import codeofcards.commands.DrawCommand;
-import codeofcards.commands.LifeAddCommand;
+import codeofcards.commands.*;
 
 public class LineCard extends Card {
     public enum LineType {
@@ -49,26 +46,25 @@ public class LineCard extends Card {
                 command = new LifeAddCommand(other.id, -1);
                 break;
             case SelfDiscardCard:
-                //player.discardCard();
+                command = new ToDiscardCommand(player.id, 1);
                 break;
             case OtherDiscardCard:
-                //other.discardCard();
+                command = new ToDiscardCommand(other.id, 1);
                 break;
             case SelfExecuteFunction:
                 //player.executeFunction(other);
                 break;
             case CyclesIncrement:
-                //command = new CyclesAddCommand(this.id, 1);
+                cyclesLeft += 2;
                 break;
             case CyclesDecrement:
-                //command = new CyclesAddCommand(this.id, -1);
+                cyclesLeft -= 1;
                 break;
             default:
                 break;
         }
 
         Game.instance.execute(command);
-        //game.execute(new CyclesAddCommand(this.id, 1));
 
         return cyclesLeft;
     }

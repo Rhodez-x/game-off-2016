@@ -17,7 +17,7 @@ public class FunctionCard extends FlowCard{
     
     @Override
     public String toString() {
-        return this.text + " " + this.cycles;
+        return this.text + " " + this.cycles + " -> " + cards.toString();
     }
 
     public int addCycles(int amount) {

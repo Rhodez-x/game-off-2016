@@ -23,5 +23,4 @@ public class RepeatCard extends FlowCard{
 
         return cycles;
     }
-    
 }
