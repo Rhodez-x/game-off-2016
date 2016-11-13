@@ -78,4 +78,16 @@ public class Game {
             command.execute(this);
         }
     }
+
+    public int getInput(String text, int maxChoice) {
+        int choice = -1;
+        Scanner sc = new Scanner(System.in);
+
+        while(choice < 0 || choice > maxChoice + 1) {
+            System.out.format("%s [1-%d]", text, maxChoice);
+            choice = sc.nextInt();
+        }
+
+        return choice - 1;
+    }
 }
