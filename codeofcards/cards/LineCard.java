@@ -68,4 +68,9 @@ public class LineCard extends Card {
 
         return cyclesLeft;
     }
+
+    @Override
+    public Card clone() {
+        return new LineCard(text, frequency, lineType);
+    }
 }

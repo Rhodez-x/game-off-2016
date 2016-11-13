@@ -77,8 +77,7 @@ public class CardFactory {
 
         for (Card card : cards) {
             if (randomNumber < card.frequency) {
-                Card tempCard = card;
-                return tempCard;
+                return card.clone();
             }
 
             randomNumber -= card.frequency;

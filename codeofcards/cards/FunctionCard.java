@@ -25,4 +25,9 @@ public class FunctionCard extends FlowCard{
 
         return cycles;
     }
+
+    @Override
+    public Card clone() {
+        return new FunctionCard(text, frequency, cycles);
+    }
 }

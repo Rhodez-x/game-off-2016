@@ -23,4 +23,9 @@ public class RepeatCard extends FlowCard{
 
         return cycles;
     }
+
+    @Override
+    public Card clone() {
+        return new RepeatCard(text, frequency, times);
+    }
 }

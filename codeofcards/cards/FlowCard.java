@@ -4,7 +4,7 @@ import codeofcards.Player;
 
 import java.util.ArrayList;
 
-public class FlowCard extends Card{
+public abstract class FlowCard extends Card{
 
     public ArrayList<Card> cards = new ArrayList<>();
 

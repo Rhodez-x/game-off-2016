@@ -12,4 +12,9 @@ public class EventCard extends FunctionCard {
         super(text, frequency, cycles);
         this.eventType = eventType;
     }
+
+    @Override
+    public Card clone() {
+        return new EventCard(text, frequency, cycles, eventType);
+    }
 }
