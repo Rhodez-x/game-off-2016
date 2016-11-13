@@ -3,10 +3,7 @@ package codeofcards;
 import codeofcards.cards.Card;
 import codeofcards.cards.FunctionCard;
 import codeofcards.cards.LineCard;
-import codeofcards.commands.BoardAddFunctionCommand;
-import codeofcards.commands.Command;
-import codeofcards.commands.DrawCommand;
-import codeofcards.commands.PlayCardCommand;
+import codeofcards.commands.*;
 
 import javax.sound.sampled.Line;
 import java.util.*;
@@ -49,19 +46,32 @@ public class Player {
             System.out.println("\nChoose what to do\n1: Draw | 2: Play Card | 3: Place card in function ");
             System.out.println("Your hand: " + this.cards);
             Scanner sc = new Scanner(System.in);
-            int chooise = sc.nextInt();
-            switch (chooise) {
+            int choice = sc.nextInt();
+            switch (choice) {
                 case 1: // Draw card
                     game.serverExecute(new DrawCommand(id));
                     break;            
-                case 2:// Play a card, diretcly 
-                    System.out.println("Witch card do you want to play?" + this.cards);
-                    chooise = sc.nextInt();
-                    System.out.println("You played this card" + this.cards.get(chooise));
-                    this.playCard(chooise, other);
+                case 2:// Play a card, directly
+                    System.out.println("Which card do you want to play?" + this.cards);
+                    choice = sc.nextInt();
+                    System.out.println("You played this card" + this.cards.get(choice));
+                    this.playCard(choice, other);
                     break;
                 case 3: // Place a card in function
-                    
+                    System.out.println("Which card do you want to place?" + this.cards);
+                    int cardIndex = sc.nextInt();
+                    System.out.println("In which function should it be placed?" + board.functionCards);
+                    int functionIndex = sc.nextInt();
+
+                    if (board.functionCards.get(functionIndex).cards.size() > 0) {
+                        System.out.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
+                        choice = sc.nextInt();
+                    }
+                    else {
+                        choice = 0;
+                    }
+
+                    game.serverExecute(new AddCardToFunctionCommand(id, cards.get(cardIndex), functionIndex, choice));
                     break;
                 case 0:
                     break;

@@ -40,10 +40,14 @@ public class Board {
         functionCards.get(functionIndex).addCycles(amount);
     }
 
-    public boolean addCardToFuction(Card card, int functionIndex, int index) {
+    public boolean addCardToFunction(Card card, int functionIndex, int index) {
         if (card instanceof LineCard &&
                 ((((LineCard) card).lineType != LineCard.LineType.SelfExecuteFunction)
                 || (((LineCard) card).lineType != LineCard.LineType.OtherExecuteFunction))) {
+
+            if (index > functionCards.get(functionIndex).cards.size()) {
+                index = functionCards.get(functionIndex).cards.size();
+            }
             functionCards.get(functionIndex).addCard(card, index);
             return true;
         }

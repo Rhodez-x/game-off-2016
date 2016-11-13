@@ -30,7 +30,7 @@ public class CardFactory {
 
         // Function Executing
         this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.SelfExecuteFunction));
-        this.cardPrototypes.add(new LineCard("Execute Function", 3, LineCard.LineType.OtherExecuteFunction));
+        this.cardPrototypes.add(new LineCard("Execute Function with Other", 3, LineCard.LineType.OtherExecuteFunction));
 
         // Function Cycles
         this.cardPrototypes.add(new LineCard("Function.Cycles++", 4, LineCard.LineType.CyclesIncrement));
