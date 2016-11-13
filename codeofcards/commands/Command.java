@@ -7,5 +7,7 @@ import codeofcards.Game;
  */
 public abstract class Command {
     public abstract void execute(Game game);
+
+
 }
 

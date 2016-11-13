@@ -2,25 +2,31 @@ package codeofcards;
 
 import codeofcards.cards.Card;
 import codeofcards.cards.FunctionCard;
+import codeofcards.cards.LineCard;
+import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
+import codeofcards.commands.PlayCardCommand;
 
+import javax.sound.sampled.Line;
 import java.util.*;
 
 public class Player {
     public int id;
     public String name;
-    public Board board;
+    private Game game;
+    private Board board;
     public int life;
     public int actionLeft;
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
         
-    Player(int id, String name, int life, Board board) {
+    Player(int id, String name, int life, Game game) {
         this.id = id;
         this.name = name;
         this.life = life;
-        this.board = board;
+        this.game = game;
+        this.board = game.board;
     }
     
     @Override
@@ -31,12 +37,22 @@ public class Player {
     public void turn(Player other) {
         //board.onTurnStart(this);
         for(int i=1; i<4; i++){
-            System.out.println("Choose what to do. \n 1 = Draw card \n 2 = Play card directly \n 3 = place a card in a function ");
+            System.out.println();
+
+            System.out.format("Player 0: %2d | Player 1: %2d\n", life, other.life);
+
+            System.out.println("Board:");
+            for (int j = 0; j < board.functionCards.size(); j++) {
+                System.out.format("%s: %-20s -> %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
+            }
+
+            System.out.println("\nChoose what to do\n1: Draw | 2: Play Card | 3: Place card in function ");
+            System.out.println("Your hand: " + this.cards);
             Scanner sc = new Scanner(System.in);
             int chooise = sc.nextInt();
             switch (chooise) {
                 case 1: // Draw card
-                    Game.instance.execute(new DrawCommand(id));
+                    game.serverExecute(new DrawCommand(id));
                     break;            
                 case 2:// Play a card, diretcly 
                     System.out.println("Witch card do you want to play?" + this.cards);
@@ -52,18 +68,25 @@ public class Player {
                 default: // CodeOfCards.Player chooise a worng number.
                     break;
             }
-            System.out.println("CodeOfCards.Board contains " + board.functionCards);
+
         }
         
     }
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
-        if (card instanceof FunctionCard) {
-            board.addFunctionToBoard((FunctionCard)card);
-        }
-        card.execute(1, this, other);
+        int functionIndex = 0;
 
-        removeCard(card);
+        if (card instanceof LineCard &&
+                (((LineCard) card).lineType == LineCard.LineType.SelfExecuteFunction ||
+                 ((LineCard) card).lineType == LineCard.LineType.OtherExecuteFunction ||
+                 ((LineCard) card).lineType == LineCard.LineType.CyclesIncrement ||
+                 ((LineCard) card).lineType == LineCard.LineType.CyclesDecrement)) {
+            System.out.println("Which function? " + board.functionCards);
+            Scanner sc = new Scanner(System.in);
+            functionIndex = sc.nextInt();
+        }
+
+        game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));
     }
     
     void playCardToFunction() { // CodeOfCards.Player lay a card to a function

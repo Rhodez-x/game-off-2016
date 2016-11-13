@@ -36,15 +36,15 @@ public class Game {
         instance = this;
 
         System.out.println("Welcome to the game.");
-        Player player1 = new Player(0, "CodeOfCards.Player 1", 50, this.board);
-        Player player2 = new Player(1, "CodeOfCards.Player 2", 50, this.board);
+        Player player1 = new Player(0, "CodeOfCards.Player 1", 50, this);
+        Player player2 = new Player(1, "CodeOfCards.Player 2", 50, this);
         playerList.add(player1);
         playerList.add(player2);
         currentPlayer = 0;
         while(true) {
             playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
             currentPlayer = (currentPlayer + 1) % 2;
-            System.out.println(currentPlayer);
+            System.out.println("//////////////////\n//Player " + currentPlayer + "\n//////////////////");
         }
     }
 
@@ -55,8 +55,10 @@ public class Game {
     public void execute(Command command) {
         commandQueue.add(command);
         command.execute(this);
+    }
 
-        // Send command to other client
+    public void sendCommand(Command command) {
+
     }
 
     public void serverExecute(Command command) {

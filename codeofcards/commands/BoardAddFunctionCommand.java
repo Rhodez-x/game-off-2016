@@ -8,12 +8,10 @@ import codeofcards.cards.FunctionCard;
  */
 public class BoardAddFunctionCommand extends Command {
     public int playerId;
-    public int functionIndex;
     public FunctionCard functionCard;
 
-    BoardAddFunctionCommand(int playerId, int functionIndex, FunctionCard functionCard) {
+    public BoardAddFunctionCommand(int playerId, FunctionCard functionCard) {
         this.playerId = playerId;
-        this.functionIndex = functionIndex;
         this.functionCard = functionCard;
     }
 
