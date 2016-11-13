@@ -3,6 +3,7 @@ package codeofcards;
 import codeofcards.commands.Command;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
     // Singleton :/
@@ -13,7 +14,7 @@ public class Game {
     public Board board;
     public CardFactory cardfactory;
 
-    public boolean isHost = true;
+    public boolean isHost = false;
 
     public ArrayList<Command> commandQueue = new ArrayList<>();
     
@@ -23,8 +24,19 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
-        game.hostGame();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
+        int choice = sc.nextInt();
+        if (choice == 1) {
+            Game game = new Game();
+            game.hostGame();
+        } else if (choice == 2) {
+            System.out.println("Starting game with you as host");
+        } else if (choice == 3) {
+            System.out.println("Connect a game");
+        } else {
+            
+        }
     }
 
     public void hostGame() {
