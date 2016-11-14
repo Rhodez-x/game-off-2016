@@ -32,6 +32,16 @@ public class Player {
     public void turn(Player other) {
         //board.onTurnStart(this);
 
+        while (discardCount > 0) {
+            System.out.format("You must discard %d cards. Choose card to discard %s\n", discardCount, cards);
+            int choice = game.getInput("Card", cards.size());
+
+            if (choice < 0) continue;
+
+            game.serverExecute(new DiscardCommand(id, cards.get(choice)));
+            discardCount--;
+        }
+
         int actionsDone = 0;
 
         while(actionsDone < 3){
@@ -116,7 +126,7 @@ public class Player {
         */
     }
     
-    public void discardCard(int cardIndex) {
+    public void discardCard(Card cardIndex) {
         removeCard(cardIndex);
     }
 
@@ -137,7 +147,7 @@ public class Player {
 
     public void removeCard(Card card) {
         cards.remove(card);
-        board.removeCard(card);
+        //board.removeCard(card);
     }
 
     public void removeCard(int cardIndex) {
