@@ -1,6 +1,6 @@
-# GitHub Game Off 2016
+# GitHub CodeOfCards.Game Off 2016
 
-![GitHub Game Off 2016 Theme is Hacking, Modding, or Augmenting](https://cloud.githubusercontent.com/assets/121322/19498019/d8827370-9543-11e6-82d8-6da822b6147b.png)
+![GitHub CodeOfCards.Game Off 2016 Theme is Hacking, Modding, or Augmenting](https://cloud.githubusercontent.com/assets/121322/19498019/d8827370-9543-11e6-82d8-6da822b6147b.png)
 
 <div align="right">
   <sup>
@@ -39,9 +39,9 @@ If you're **new to Git, GitHub, or version control**…
 * [Git Documentation](https://git-scm.com/documentation) - everything you need to know about version control, and how to get started with Git.
 * [GitHub Help](https://help.github.com/) - everything you need to know about GitHub.
 * Questions about GitHub? Please [contact our Support team][github-support] and they'll be delighted to help you.
-* Questions specific to the GitHub Game Off? Please [create an issue][game-off-repo-issues]. This will be the official FAQ.
+* Questions specific to the GitHub CodeOfCards.Game Off? Please [create an issue][game-off-repo-issues]. This will be the official FAQ.
 
-The official Twitter hashtag for the Game Off is `#ggo16`. We look forward to playing with your creations.
+The official Twitter hashtag for the CodeOfCards.Game Off is `#ggo16`. We look forward to playing with your creations.
 
 GLHF! <3
 
@@ -77,7 +77,7 @@ GLHF! <3
 * [Git Documentation](https://git-scm.com/documentation) - バージョンコントロールについてと、Gitを使い始めるために必要な情報はここにあります。（日本語で読める情報としては[Pro Gitの日本語版](https://git-scm.com/book/ja/v2)があります）
 * [GitHub Help](https://help.github.com/) - GitHubについてはこちらを参照してください。
 * GitHubについて質問したいことがあれば、ぜひ[ここから問い合わせてください！（ただし英語でお願いします :bow: )][github-support] サポートチームが助けてくれます。
-* GitHub Game Offに関する質問については、[ここにIssueを作って聞いてください。（英語でお願いします）][game-off-repo-issues]. これが公式のFAQになっていく予定です。
+* GitHub CodeOfCards.Game Offに関する質問については、[ここにIssueを作って聞いてください。（英語でお願いします）][game-off-repo-issues]. これが公式のFAQになっていく予定です。
 
 このGame OffのためのTwitterの公式ハッシュタグは`#ggo16`です。皆さんのゲームで遊べるのを楽しみにしています。
 

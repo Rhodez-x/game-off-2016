@@ -1,3 +1,7 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 public class RepeatCard extends FlowCard{
     public int times;
 
@@ -19,5 +23,9 @@ public class RepeatCard extends FlowCard{
 
         return cycles;
     }
-    
+
+    @Override
+    public Card clone() {
+        return new RepeatCard(text, frequency, times);
+    }
 }

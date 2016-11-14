@@ -1,3 +1,5 @@
+package codeofcards;
+
 import java.util.ArrayList;
 
 import processing.core.*;
@@ -47,7 +49,7 @@ def c(h, x):
 */
 
 	public void draw() {
-		// for (FunctionCard funcCard : game.board.functionCards) {
+		// for (CodeOfCards.FunctionCard funcCard : game.board.functionCards) {
 
             float functionHeight = (fff.size()+1) * cardHeight;
             int indent = 0;
@@ -109,6 +111,6 @@ def c(h, x):
 	}
 
     public static void main(String[] args){
-    	PApplet.main("CodeOfCards");
+    	PApplet.main("codeofcards.CodeOfCards");
     }
 }

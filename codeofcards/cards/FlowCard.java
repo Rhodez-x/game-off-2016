@@ -1,8 +1,12 @@
+package codeofcards.cards;
+
+import codeofcards.Player;
+
 import java.util.ArrayList;
 
-public class FlowCard extends Card{
+public abstract class FlowCard extends Card{
 
-    ArrayList<Card> cards = new ArrayList<>();
+    public ArrayList<Card> cards = new ArrayList<>();
 
     @Override
     public int execute(int cycles, Player player, Player other) {
@@ -16,9 +20,13 @@ public class FlowCard extends Card{
 
         return cycles;
     }
+
+    public void addCard(Card card, int index) {
+        cards.add(index, card);
+    }
     
     @Override
     public String toString() {
-        return this.text;
+        return text + " -> " + cards.toString();
     } 
 }
