@@ -3,7 +3,7 @@ package codeofcards.commands;
 import codeofcards.Game;
 import codeofcards.cards.Card;
 import codeofcards.cards.FunctionCard;
-import codeofcards.cards.LineCard;
+import codeofcards.cards.StatementCard;
 
 /**
  * Created by mads on 13/11/2016.
@@ -35,12 +35,12 @@ public class PlayCardCommand extends Command {
 
             game.execute(command);
         }
-        else if (card instanceof LineCard &&
-                 (((LineCard) card).lineType == LineCard.LineType.SelfExecuteFunction ||
-                  ((LineCard) card).lineType == LineCard.LineType.OtherExecuteFunction)) {
+        else if (card instanceof StatementCard &&
+                 (((StatementCard) card).statementType == StatementCard.StatementType.SelfExecuteFunction ||
+                  ((StatementCard) card).statementType == StatementCard.StatementType.OtherExecuteFunction)) {
 
-            int player = ((LineCard) card).lineType == LineCard.LineType.SelfExecuteFunction ? playerId : otherId;
-            int other = ((LineCard) card).lineType == LineCard.LineType.SelfExecuteFunction ? otherId : playerId;
+            int player = ((StatementCard) card).statementType == StatementCard.StatementType.SelfExecuteFunction ? playerId : otherId;
+            int other = ((StatementCard) card).statementType == StatementCard.StatementType.SelfExecuteFunction ? otherId : playerId;
 
             Command command = new ExecuteFunctionCommand(player, other, functionIndex);
             game.execute(command);

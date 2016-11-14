@@ -4,29 +4,29 @@ import codeofcards.Game;
 import codeofcards.Player;
 import codeofcards.commands.*;
 
-public class LineCard extends Card {
-    public enum LineType {
+public class StatementCard extends Card {
+    public enum StatementType {
         SelfDrawCard, OtherDrawCard, SelfIncrementLife, SelfDecrementLife, OtherIncrementLife, OtherDecrementLife,
         SelfDiscardCard, OtherDiscardCard, SelfExecuteFunction, OtherExecuteFunction, CyclesIncrement, CyclesDecrement}
-    
-    public LineType lineType;
-    
-    public LineCard(String text, int frequency, LineType lineType) {
-        this.lineType = lineType;
+
+    public StatementType statementType;
+
+    public StatementCard(String text, int frequency, StatementType statementType) {
+        this.statementType = statementType;
         this.frequency = frequency;
         this.text = text;
     }
-    
+
     @Override
     public String toString() {
         return this.text;
-    } 
-    
+    }
+
     @Override
     public int execute(int cyclesLeft, Player player, Player other) {
         Command command = null;
 
-        switch (lineType) {
+        switch (statementType) {
             case SelfDrawCard:
                 command = new DrawCommand(player.id);
                 break;
@@ -73,6 +73,6 @@ public class LineCard extends Card {
 
     @Override
     public Card clone() {
-        return new LineCard(text, frequency, lineType);
+        return new StatementCard(text, frequency, statementType);
     }
 }

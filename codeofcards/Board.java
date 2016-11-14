@@ -3,7 +3,7 @@ package codeofcards;
 import codeofcards.cards.Card;
 import codeofcards.cards.EventCard;
 import codeofcards.cards.FunctionCard;
-import codeofcards.cards.LineCard;
+import codeofcards.cards.StatementCard;
 
 import java.util.ArrayList;
 
@@ -41,9 +41,9 @@ public class Board {
     }
 
     public boolean addCardToFunction(Card card, int functionIndex, int index) {
-        if (card instanceof LineCard &&
-                ((((LineCard) card).lineType != LineCard.LineType.SelfExecuteFunction)
-                || (((LineCard) card).lineType != LineCard.LineType.OtherExecuteFunction))) {
+        if (card instanceof StatementCard &&
+                ((((StatementCard) card).statementType != StatementCard.StatementType.SelfExecuteFunction)
+                || (((StatementCard) card).statementType != StatementCard.StatementType.OtherExecuteFunction))) {
 
             if (index > functionCards.get(functionIndex).cards.size()) {
                 index = functionCards.get(functionIndex).cards.size();

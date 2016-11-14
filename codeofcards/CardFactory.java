@@ -8,33 +8,33 @@ import java.util.Random;
 public class CardFactory {
     Board board;
     ArrayList<Card> cardPrototypes = new ArrayList<>();
-    
+
     CardFactory(Board board) {
         this.board = board;
 
         // Draw Cards
-        this.cardPrototypes.add(new LineCard("Self.DrawCard()", 4, LineCard.LineType.SelfDrawCard));
-        this.cardPrototypes.add(new LineCard("Other.DrawCard()", 4, LineCard.LineType.OtherDrawCard));
+        this.cardPrototypes.add(new StatementCard("Self.DrawCard()", 4, StatementCard.StatementType.SelfDrawCard));
+        this.cardPrototypes.add(new StatementCard("Other.DrawCard()", 4, StatementCard.StatementType.OtherDrawCard));
 
         // Increment Life
-        this.cardPrototypes.add(new LineCard("Self.Life++", 4, LineCard.LineType.SelfIncrementLife));
-        this.cardPrototypes.add(new LineCard("Other.Life++", 4, LineCard.LineType.OtherIncrementLife));
+        this.cardPrototypes.add(new StatementCard("Self.Life++", 4, StatementCard.StatementType.SelfIncrementLife));
+        this.cardPrototypes.add(new StatementCard("Other.Life++", 4, StatementCard.StatementType.OtherIncrementLife));
 
         // Decrement Life
-        this.cardPrototypes.add(new LineCard("Self.Life--", 4, LineCard.LineType.SelfDecrementLife));
-        this.cardPrototypes.add(new LineCard("Other.Life--", 4, LineCard.LineType.OtherDecrementLife));
+        this.cardPrototypes.add(new StatementCard("Self.Life--", 4, StatementCard.StatementType.SelfDecrementLife));
+        this.cardPrototypes.add(new StatementCard("Other.Life--", 4, StatementCard.StatementType.OtherDecrementLife));
 
         // Discard
-        this.cardPrototypes.add(new LineCard("Self.DiscardCard()", 4, LineCard.LineType.SelfDiscardCard));
-        this.cardPrototypes.add(new LineCard("Other.DiscardCard()", 4, LineCard.LineType.OtherDiscardCard));
+        this.cardPrototypes.add(new StatementCard("Self.DiscardCard()", 4, StatementCard.StatementType.SelfDiscardCard));
+        this.cardPrototypes.add(new StatementCard("Other.DiscardCard()", 4, StatementCard.StatementType.OtherDiscardCard));
 
         // Function Executing
-        this.cardPrototypes.add(new LineCard("Execute Function", 5, LineCard.LineType.SelfExecuteFunction));
-        this.cardPrototypes.add(new LineCard("Execute Function with Other", 3, LineCard.LineType.OtherExecuteFunction));
+        this.cardPrototypes.add(new StatementCard("Execute Function", 5, StatementCard.StatementType.SelfExecuteFunction));
+        this.cardPrototypes.add(new StatementCard("Execute Function with Other", 3, StatementCard.StatementType.OtherExecuteFunction));
 
         // Function Cycles
-        this.cardPrototypes.add(new LineCard("Function.Cycles++", 4, LineCard.LineType.CyclesIncrement));
-        this.cardPrototypes.add(new LineCard("Function.Cycles--", 3, LineCard.LineType.CyclesDecrement));
+        this.cardPrototypes.add(new StatementCard("Function.Cycles++", 4, StatementCard.StatementType.CyclesIncrement));
+        this.cardPrototypes.add(new StatementCard("Function.Cycles--", 3, StatementCard.StatementType.CyclesDecrement));
 
         // Function cards
         this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
@@ -51,7 +51,7 @@ public class CardFactory {
         this.cardPrototypes.add(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
         this.cardPrototypes.add(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
     }
-    
+
     public Card newCard() {
         ArrayList<Card> cards = new ArrayList<>();
 

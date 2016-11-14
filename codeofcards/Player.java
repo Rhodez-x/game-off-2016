@@ -1,7 +1,7 @@
 package codeofcards;
 
 import codeofcards.cards.Card;
-import codeofcards.cards.LineCard;
+import codeofcards.cards.StatementCard;
 import codeofcards.commands.*;
 
 import java.util.*;
@@ -15,7 +15,7 @@ public class Player {
     public int actionLeft;
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
-        
+
     Player(int id, String name, int life, Game game) {
         this.id = id;
         this.name = name;
@@ -23,12 +23,12 @@ public class Player {
         this.game = game;
         this.board = game.board;
     }
-    
+
     @Override
     public String toString() {
         return this.name;
     }
-    
+
     public void turn(Player other) {
         //board.onTurnStart(this);
 
@@ -66,7 +66,7 @@ public class Player {
                 case 0: // Draw card
                     game.serverExecute(new DrawCommand(id));
                     actionsDone++;
-                    break;            
+                    break;
                 case 1:// Play a card, directly
                     System.out.println("Which card do you want to play?" + this.cards);
                     choice = game.getInput("Card", this.cards.size());
@@ -107,25 +107,25 @@ public class Player {
         Card card = cards.get(cardIndex);
         int functionIndex = 0;
 
-        if (card instanceof LineCard &&
-                (((LineCard) card).lineType == LineCard.LineType.SelfExecuteFunction ||
-                 ((LineCard) card).lineType == LineCard.LineType.OtherExecuteFunction ||
-                 ((LineCard) card).lineType == LineCard.LineType.CyclesIncrement ||
-                 ((LineCard) card).lineType == LineCard.LineType.CyclesDecrement)) {
+        if (card instanceof StatementCard &&
+                (((StatementCard) card).statementType == StatementCard.StatementType.SelfExecuteFunction ||
+                 ((StatementCard) card).statementType == StatementCard.StatementType.OtherExecuteFunction ||
+                 ((StatementCard) card).statementType == StatementCard.StatementType.CyclesIncrement ||
+                 ((StatementCard) card).statementType == StatementCard.StatementType.CyclesDecrement)) {
             System.out.println("Which function? " + board.functionCards);
             functionIndex = game.getInput("Function", board.functionCards.size());
         }
 
         game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));
     }
-    
+
     void playCardToFunction() { // CodeOfCards.Player lay a card to a function
         /*
-        Spørg spiller vælge et kort. 
+        Spørg spiller vælge et kort.
         sender et kort til board
         */
     }
-    
+
     public void discardCard(Card cardIndex) {
         removeCard(cardIndex);
     }

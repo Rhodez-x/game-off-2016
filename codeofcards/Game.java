@@ -29,6 +29,7 @@ public class Game {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
         int choice = sc.nextInt();
+        sc.close();
         if (choice == 1) {
             Game game = new Game();
             game.hostGame();
@@ -96,6 +97,7 @@ public class Game {
             System.out.format("%s [1-%d]", text, maxChoice);
             choice = sc.nextInt();
         }
+        sc.close();
 
         return choice - 1;
     }
