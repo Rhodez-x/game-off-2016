@@ -17,7 +17,7 @@ public class FunctionCardGraphic extends GraphicsObject {
 		this.card = card;
 		this.pos = pos;
 		this.offset = new PVector(0, 0);
-		this.dim = new PVector(300, CardGraphic.cardHeight * card.cards.size() + 2*padding);
+		this.dim = new PVector(300, CardViewNode.cardHeight * card.cards.size() + 2*padding);
 	}
 
 	@Override

@@ -1,14 +1,18 @@
 package codeofcards;
 
-import java.util.ArrayList;
-
-import processing.core.*;
+//import java.util.ArrayList;
+import codeofcards.graphics.GameView;
+import processing.core.PApplet;
 
 /**
  *
  * @author rhodez-x
  */
-public class CodeOfCards extends PApplet {
+public class CodeOfCards {
+	
+	public static void main(String[] args) {
+		PApplet.main("codeofcards.graphics.GameView");
+	}
 //    int red = color(255, 0, 0);
 //	float cardHeight = 70;
 //    float cardWidth = 300;

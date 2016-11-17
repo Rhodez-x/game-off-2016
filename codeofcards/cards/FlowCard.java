@@ -20,9 +20,15 @@ public abstract class FlowCard extends Card{
 
         return cycles;
     }
+    
+    public Card pushCard(Card card) {
+    	cards.add(card);
+    	return card;
+    }
 
-    public void addCard(Card card, int index) {
+    public Card addCard(Card card, int index) {
         cards.add(index, card);
+        return card;
     }
     
     @Override

@@ -3,7 +3,7 @@ package codeofcards.cards;
 import codeofcards.Player;
 
 public class FunctionCard extends FlowCard{
-    int cycles; // How many times the function can be called.
+    public int cycles; // How many times the function can be called.
 
     public FunctionCard(String text, int frequency, int cycles) {
         this.text = text;
