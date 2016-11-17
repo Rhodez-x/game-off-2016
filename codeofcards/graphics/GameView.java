@@ -133,6 +133,8 @@ public class GameView extends PApplet {
 	CardViewNode clickedNode;
 	boolean lastMousePressed = false;
 	
+	boolean beginDrag = false;
+	
 	public void draw() {
 		
 		background(100);
@@ -141,11 +143,28 @@ public class GameView extends PApplet {
 			root.draw(g);
 		
 		if (clickedNode != null) {
-			
-			clickedNode.draw(g, mouseX + cox, mouseY + coy);
+			if (dragging) {
+				clickedNode.draw(g, mouseX + cox, mouseY + coy, true);	
+			}
+			else {
+				clickedNode.draw(g, true);
+			}
 			if (!mousePressed && lastMousePressed) {	
 				clickedNode.gettingDragged = false;
 				clickedNode = null;
+				beginDrag = false;
+				dragging = false;
+			}
+		}
+		
+		if (beginDrag) {
+			float dx = mouseX - cx;
+			float dy = mouseY - cy;
+			
+			if (dx*dx + dy*dy > 2500) {
+				clickedNode.gettingDragged = true;
+				beginDrag = false;
+				dragging = true;
 			}
 		}
 		
@@ -153,9 +172,11 @@ public class GameView extends PApplet {
 			
 			clickedNode = root.getClickedNode(mouseX, mouseY);
 			if (clickedNode != null) {
-				clickedNode.gettingDragged = true;
 				cox = clickedNode.left() - mouseX;
 				coy = clickedNode.top() - mouseY;
+				cx = mouseX;
+				cy = mouseY;
+				beginDrag = true;
 			}
 		}
 		
