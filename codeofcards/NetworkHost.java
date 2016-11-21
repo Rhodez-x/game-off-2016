@@ -4,11 +4,33 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Scanner;
-public class NetworkHost {
+
+public class NetworkHost extends Thread {
+    public String username;
+    public Socket socket;
+    public boolean serverRunning;
+    public Scanner in;
+    public PrintStream serverPrint;
+    public String connectinCode;
+    public String password;
+    static public HashMap<String, PrintStream> connectedPlayers = new HashMap<>();
+    static public HashMap<String, Player> ;
     
-    public void run() throws IOException  { 
-    ServerSocket server = new ServerSocket(2343); 
+    NetworkHost(String username) throws IOException {
+        ServerSocket server = new ServerSocket(2343); 
+        this.serverRunning = true;
+        
+    }
+    
+    public void addClient(Socket sock) throws IOException {
+        this.socket = sock;
+        this.in = new Scanner(sock.getInputStream());
+        this.serverPrint = new PrintStream(sock.getOutputStream());
+        this.connectinCode = this.in.nextLine();
+    }
+        
         while (true) { 
             Socket sock = server.accept(); 
             Scanner in = new Scanner(sock.getInputStream()); 
@@ -17,7 +39,11 @@ public class NetworkHost {
                 System.out.println(in.nextLine()); 
                 out.println(new Scanner(System.in).nextLine()); 
             }   
-        }   
+        } 
+    }
+    @Override
+    public void run() { 
+      
     }   
 } 
 /*

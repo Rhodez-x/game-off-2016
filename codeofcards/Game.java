@@ -28,23 +28,6 @@ public class Game {
         this.scanner = new Scanner(System.in);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
-        int choice = sc.nextInt();
-        //sc.close();
-        if (choice == 1) {
-            Game game = new Game();
-            game.hostGame();
-        } else if (choice == 2) {
-            System.out.println("Starting game with you as host");
-        } else if (choice == 3) {
-            System.out.println("Connect a game");
-        } else {
-            
-        }
-    }
-
     public void hostGame() {
         isHost = true;
         runGame();
