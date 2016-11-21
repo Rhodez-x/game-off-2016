@@ -9,43 +9,61 @@ import java.util.Scanner;
 
 public class NetworkHost extends Thread {
     public String username;
+    public ServerSocket server;
     public Socket socket;
     public boolean serverRunning;
     public Scanner in;
     public PrintStream serverPrint;
     public String connectinCode;
     public String password;
-    static public HashMap<String, PrintStream> connectedPlayers = new HashMap<>();
-    static public HashMap<String, Player> ;
+    public WhileConnect connectThis;
+    //static public HashMap<String, PrintStream> connectedPlayers = new HashMap<>();
+    static public HashMap<String, Player> ConnectedPlayers = new HashMap<>();
     
     NetworkHost(String username) throws IOException {
-        ServerSocket server = new ServerSocket(2343); 
+        this.server = new ServerSocket(2343); 
         this.serverRunning = true;
-        
+        this.connectThis = new WhileConnect(this.server, this);
     }
-    
-    public void addClient(Socket sock) throws IOException {
+    public void startAddClient() throws InterruptedException {
+        String stopSearching;
+        Scanner sc = new Scanner(System.in);
+        this.connectThis.start();
+        System.out.println("Wating for clients to connect");
+        System.out.println("Write 'stop' for stop searching for players");
+        stopSearching = sc.next();
+        if (stopSearching.equals("stop")) {
+            this.stopAddClient();
+        } 
+    }
+
+    public void addClient(Socket sock) throws IOException, InterruptedException {
         this.socket = sock;
         this.in = new Scanner(sock.getInputStream());
         this.serverPrint = new PrintStream(sock.getOutputStream());
         this.connectinCode = this.in.nextLine();
     }
-        
-        while (true) { 
-            Socket sock = server.accept(); 
-            Scanner in = new Scanner(sock.getInputStream()); 
-            PrintStream out = new PrintStream(sock.getOutputStream());             
-            while (true) {
-                System.out.println(in.nextLine()); 
-                out.println(new Scanner(System.in).nextLine()); 
-            }   
-        } 
+    
+    public void stopAddClient() throws InterruptedException{
+        connectThis.searching = false;
+        connectThis.interrupt();
     }
+
+    /*while (true) { 
+        Socket sock = server.accept(); 
+        Scanner in = new Scanner(sock.getInputStream()); 
+        PrintStream out = new PrintStream(sock.getOutputStream());             
+        while (true) {
+            System.out.println(in.nextLine()); 
+            out.println(new Scanner(System.in).nextLine()); 
+        }   
+    }*/ 
+
     @Override
     public void run() { 
-      
-    }   
-} 
+
+    }
+}
 /*
 public class MyServer { 
     public static void main(String[]args) throws IOException { 
