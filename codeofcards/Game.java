@@ -19,17 +19,20 @@ public class Game {
     public boolean isHost = false;
 
     public ArrayList<Command> commandQueue = new ArrayList<>();
+
+    Scanner scanner;
     
     public Game() {
         this.board = new Board();
         this.cardfactory = board.cardFactory;
+        this.scanner = new Scanner(System.in);
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
         int choice = sc.nextInt();
-        sc.close();
+        //sc.close();
         if (choice == 1) {
             Game game = new Game();
             game.hostGame();
@@ -91,13 +94,11 @@ public class Game {
 
     public int getInput(String text, int maxChoice) {
         int choice = -1;
-        Scanner sc = new Scanner(System.in);
 
         while(choice < 0 || choice > maxChoice + 1) {
             System.out.format("%s [1-%d]", text, maxChoice);
-            choice = sc.nextInt();
+            choice = scanner.nextInt();
         }
-        sc.close();
 
         return choice - 1;
     }
