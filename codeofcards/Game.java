@@ -13,10 +13,9 @@ public class Game {
     // Singleton :/
     public static Game instance;
 
-    public String currentPlayer;
+    public int currentPlayer;
     public int numPlayers;
-    public ArrayList<String> playerOrder;
-    public HashMap<String, Player> playerList = new HashMap<>();
+    public ArrayList<Player> playerList;
     public Board board;
     public CardFactory cardfactory;
     public boolean isHost = false;
@@ -27,7 +26,7 @@ public class Game {
     
     public Game() {
         this.board = new Board();
-        this.playerOrder = new ArrayList<>();
+        this.playerList = new ArrayList<>();
         this.cardfactory = board.cardFactory;
         this.scanner = new Scanner(System.in);
     }
@@ -53,8 +52,8 @@ public class Game {
                 askForPlayers = false;
             }
         } while(askForPlayers);
-        this.shuffelPlayerOrder(playerOrder);
-        this.currentPlayer = playerOrder.get(0);
+        this.shuffelPlayerOrder(playerList);
+        this.currentPlayer = 0;
         this.runGame();
     }
     
@@ -64,8 +63,7 @@ public class Game {
     
     public void addPlayer(String playerName) {
         Player player = new Player(1, playerName, this);
-        this.playerList.put(player.name, player);
-        this.playerOrder.add(player.name);
+        this.playerList.add(player);
     }
     
     public void shuffelPlayerOrder(ArrayList playerOrder) {
@@ -77,9 +75,9 @@ public class Game {
         
         System.out.println("Welcome to the game.");
         
-        for (String players : playerOrder) {
+        for (int i = 0; i < playerList.size(); i++) {
             System.out.println(players + "Draws five cards");
-            for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 this.execute(new DrawCommand(players));
             }
         }
