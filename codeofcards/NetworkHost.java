@@ -37,8 +37,10 @@ public class NetworkHost extends Thread {
         } 
     }
 
-    public void addClient(Socket sock) throws IOException, InterruptedException {
+    public void addClient(Socket sock, String playerName) throws IOException, InterruptedException {
         System.out.println("Client added");
+        Player player = new Player(5, playerName, Main.game);
+        ConnectedPlayers.put("Player", player);
         /*this.socket = sock;
         this.in = new Scanner(sock.getInputStream());
         this.serverPrint = new PrintStream(sock.getOutputStream());

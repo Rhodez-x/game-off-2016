@@ -22,12 +22,14 @@ public class Player {
     Player() {
         
     }
-    Player(int id, String name, int life, Game game) {
+    Player(int id, String name, Game game) {
         this.id = id;
         this.name = name;
-        this.life = life;
+        this.life = 30;
         this.game = game;
         this.board = game.board;
+        game.playerOrder.add(this.name);
+        game.playerList.put(this.name, this);
     }
 
     @Override
