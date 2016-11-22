@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
         while(true) {
@@ -19,6 +19,8 @@ public class Main {
                 gameServer.startAddClient();
             } else if (choice == 3) {
                 System.out.println("Connect a game");
+                Player myPlayer = new Player();
+                myPlayer.connectToServer();
             } else if (choice == 0) {
                 break;
             }

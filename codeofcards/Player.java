@@ -3,6 +3,9 @@ package codeofcards;
 import codeofcards.cards.Card;
 import codeofcards.cards.StatementCard;
 import codeofcards.commands.*;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 
 import java.util.*;
 
@@ -16,6 +19,9 @@ public class Player {
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
 
+    Player() {
+        
+    }
     Player(int id, String name, int life, Game game) {
         this.id = id;
         this.name = name;
@@ -27,6 +33,14 @@ public class Player {
     @Override
     public String toString() {
         return this.name;
+    }
+    
+    public void connectToServer() throws IOException {
+        Socket sock = new Socket("127.0.0.1", 2343); 
+        Scanner in = new Scanner(sock.getInputStream());
+        PrintStream out = new PrintStream(sock.getOutputStream());
+        //out.println(new Scanner(System.in).nextLine()); 
+        System.out.println("I'am connected :D");  
     }
 
     public void turn(Player other) {

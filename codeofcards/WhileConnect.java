@@ -23,6 +23,7 @@ public class WhileConnect extends Thread{
             try {
                 Socket socket = this.server.accept();
                 this.serverClass.addClient(socket);
+                System.out.println("A Player is connected");
             } catch (InterruptedException e) {
                 System.out.println("Jello");
             } catch (IOException ex) {

@@ -7,6 +7,15 @@ import java.util.Scanner;
 
 public class NetworkClient { 
     
+        public boolean running;
+        public String msg;
+        public String name;
+        public String ConnectTo;
+        public Socket sock;
+        public Scanner in;
+        public PrintStream outserver;
+        public InputThread input;
+        
     public void run() throws IOException {
         Socket sock = new Socket("127.0.0.1", 2343); 
         Scanner in = new Scanner(sock.getInputStream());

@@ -25,7 +25,7 @@ public class NetworkHost extends Thread {
         this.serverRunning = true;
         this.connectThis = new WhileConnect(this.server, this);
     }
-    public void startAddClient() throws InterruptedException {
+    public void startAddClient() throws InterruptedException, IOException {
         String stopSearching;
         Scanner sc = new Scanner(System.in);
         this.connectThis.start();
@@ -33,20 +33,21 @@ public class NetworkHost extends Thread {
         System.out.println("Write 'stop' for stop searching for players");
         stopSearching = sc.next();
         if (stopSearching.equals("stop")) {
-            this.stopAddClient();
+            this.stopAddClient(server);
         } 
     }
 
     public void addClient(Socket sock) throws IOException, InterruptedException {
-        this.socket = sock;
+        System.out.println("Client added");
+        /*this.socket = sock;
         this.in = new Scanner(sock.getInputStream());
         this.serverPrint = new PrintStream(sock.getOutputStream());
-        this.connectinCode = this.in.nextLine();
+        this.connectinCode = this.in.nextLine();*/
     }
     
-    public void stopAddClient() throws InterruptedException{
+    public void stopAddClient(ServerSocket server) throws InterruptedException, IOException{
         connectThis.searching = false;
-        connectThis.interrupt();
+        server.close();
     }
 
     /*while (true) { 
