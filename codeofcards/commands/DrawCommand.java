@@ -5,21 +5,21 @@ import codeofcards.Game;
 import codeofcards.cards.Card;
 
 public class DrawCommand extends Command {
-    public int targetId;
+    public String targetPlayerName;
     public Card card;
 
-    public DrawCommand(int targetId, CardFactory cardFactory) {
-        this.targetId = targetId;
+    public DrawCommand(String targetPlayerName, CardFactory cardFactory) {
+        this.targetPlayerName = targetPlayerName;
         this.card = cardFactory.newCard();
     }
 
-    public DrawCommand(int targetId) {
-        this(targetId, Game.instance.cardfactory);
+    public DrawCommand(String targetPlayerName) {
+        this(targetPlayerName, Game.instance.cardfactory);
     }
 
     @Override
     public void execute(Game game) {
-        game.getPlayer(targetId).giveCard(this.card);
+        game.getPlayer(targetPlayerName).giveCard(this.card);
         game.board.addCard(this.card);
     }
 }

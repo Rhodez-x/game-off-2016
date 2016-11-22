@@ -13,7 +13,7 @@ public class Game {
     // Singleton :/
     public static Game instance;
 
-    public int currentPlayer;
+    public String currentPlayer;
     public int numPlayers;
     public ArrayList<String> playerOrder;
     public HashMap<String, Player> playerList = new HashMap<>();
@@ -53,6 +53,8 @@ public class Game {
                 askForPlayers = false;
             }
         } while(askForPlayers);
+        this.shuffelPlayerOrder(playerOrder);
+        this.currentPlayer = playerOrder.get(0);
         this.runGame();
     }
     
@@ -78,20 +80,25 @@ public class Game {
         for (String players : playerOrder) {
             System.out.println(players + "Draws five cards");
             for (int i = 0; i < 5; i++) {
-                this.execute(new DrawCommand(playerList.get(players).id));
+                this.execute(new DrawCommand(players));
             }
         }
-
-        currentPlayer = 0;
         while(true) {
-            playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
-            currentPlayer = (currentPlayer + 1) % 2;
-            System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+            //playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
+            playerList.get(currentPlayer).turn(playerList.get(currentPlayer));
+            this.changeTurn();
+            //currentPlayer = (currentPlayer + 1) % 2;
+            //System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
         }
     }
+    
+    public void changeTurn() {
+        
+        System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+    }
 
-    public Player getPlayer(int playerId) {
-        return playerList.get(playerId);
+    public Player getPlayer(String playerName) {
+        return playerList.get(playerName);
     }
 
     public void execute(Command command) {

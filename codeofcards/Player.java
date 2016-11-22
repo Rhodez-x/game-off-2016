@@ -80,7 +80,7 @@ public class Player {
 
             switch (choice) {
                 case 0: // Draw card
-                    game.serverExecute(new DrawCommand(id));
+                    game.serverExecute(new DrawCommand(name));
                     actionsDone++;
                     break;
                 case 1:// Play a card, directly
