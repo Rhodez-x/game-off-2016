@@ -4,7 +4,6 @@ import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,10 +62,8 @@ public class Game {
     
     public void setupNetworkGame(ArrayList<Player> players, int playerCount) throws IOException {
         System.out.println("Setting up game:");
-        //String playerName = this.scanner.next();
-        //Player player = new Player(playerCount, playerName, this, null);
-        //players.add(player);
         this.playerList = players;
+        this.currentPlayer = 0;
         this.runNetworkGame();
     }
     
@@ -84,24 +81,24 @@ public class Game {
         instance = this;
         for (Player players : playerList) {
             players.sendMsgToPlayer.println("Welcome to this network game. :D");
+            players.sendMsgToPlayer.println(playerList);
         }
         
-        System.out.println("Welcome to the game.");
-        System.out.println(playerList);
         for (int i = 0; i < this.playerList.size(); i++) {
-            System.out.println(this.playerList.get(i) + "Draws five cards");
+            communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
             for (int j = 0; j < 5; j++) {
-                System.out.println("Card drawed");
                 this.execute(new DrawCommand(this.playerList.get(i).id));
             }
-            System.out.println("Player hand" + this.playerList.get(i).cards);
         }
         while(true) {
-            //playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
-            this.playerList.get(this.currentPlayer).turn(this.playerList.get(this.currentPlayer));
+            this.playerList.get(this.currentPlayer).turn(playerList);
             this.changeTurn();
-            //currentPlayer = (currentPlayer + 1) % 2;
-            //System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+        }
+    }
+    
+    public void communicateWithNetworkPlayers(ArrayList<Player> playerList, String msg) {
+        for (Player players : playerList) {
+            players.sendMsgToPlayer.println(msg);
         }
     }
     
@@ -113,22 +110,17 @@ public class Game {
         for (int i = 0; i < this.playerList.size(); i++) {
             System.out.println(this.playerList.get(i) + "Draws five cards");
             for (int j = 0; j < 5; j++) {
-                System.out.println("Card drawed");
                 this.execute(new DrawCommand(this.playerList.get(i).id));
             }
             System.out.println("Player hand" + this.playerList.get(i).cards);
         }
         while(true) {
-            //playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
-            this.playerList.get(this.currentPlayer).turn(this.playerList.get(this.currentPlayer));
+            this.playerList.get(this.currentPlayer).turn(playerList);
             this.changeTurn();
-            //currentPlayer = (currentPlayer + 1) % 2;
-            //System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
         }
     }
     
     public void changeTurn() {
-        
         System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
     }
 
@@ -151,14 +143,15 @@ public class Game {
         }
     }
 
-    public int getInput(String text, int maxChoice) {
+    public int getInput(String text, int maxChoice, Player player) {
         int choice = -1;
 
         while(choice < 0 || choice > maxChoice + 1) {
-            System.out.format("%s [1-%d]", text, maxChoice);
-            choice = scanner.nextInt();
+            player.sendMsgToPlayer.println("itsyourturn4322");
+            player.sendMsgToPlayer.format("%s [1-%d]", text, maxChoice);
+            choice = Integer.parseInt(player.playersInput.next());
         }
-
+        
         return choice - 1;
     }
 }

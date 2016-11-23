@@ -14,6 +14,7 @@ public class Player {
     public String name;
     public Socket playerSocket;
     public PrintStream sendMsgToPlayer;
+    public Scanner playersInput;
     private Game game;
     private Board board;
     public int life;
@@ -32,27 +33,20 @@ public class Player {
         this.board = game.board;
         this.playerSocket = playerSocket;
         this.sendMsgToPlayer = new PrintStream(this.playerSocket.getOutputStream());
+        this.playersInput = new Scanner(this.playerSocket.getInputStream());
     }
 
     @Override
     public String toString() {
         return this.name;
     }
-    
-    public void connectToServer() throws IOException {
-        Socket sock = new Socket("127.0.0.1", 2343); 
-        Scanner in = new Scanner(sock.getInputStream());
-        PrintStream out = new PrintStream(sock.getOutputStream());
-        //out.println(new Scanner(System.in).nextLine()); 
-        System.out.println("I'am connected :D");  
-    }
 
-    public void turn(Player other) {
+    public void turn(ArrayList<Player> playerList) {
         //board.onTurnStart(this);
 
         while (discardCount > 0) {
-            System.out.format("You must discard %d cards. Choose card to discard %s\n", discardCount, cards);
-            int choice = game.getInput("Card", cards.size());
+            this.sendMsgToPlayer.format("You must discard %d cards. Choose card to discard %s\n", discardCount, cards);
+            int choice = game.getInput("Card", cards.size(), this);
 
             if (choice < 0) continue;
 
@@ -63,49 +57,53 @@ public class Player {
         int actionsDone = 0;
 
         while(actionsDone < 3){
-            System.out.format("%s: %2d | %s: %2d\n", name, life, other.name, other.life);
+            for (Player players : playerList) {
+                System.out.format("%s: %2d | %s: %2d\n", name, life, players.name, players.life);
+            }
+    
 
-            System.out.println("Board:");
+            this.sendMsgToPlayer.println("Board:");
             for (int j = 0; j < board.functionCards.size(); j++) {
-                System.out.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
+                this.sendMsgToPlayer.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
             }
 
-            System.out.println("\nChoose what to do, " + name);
-            System.out.println("1: Draw | 2: Play Card | 3: Place card in function ");
-            System.out.println("Your hand: " + this.cards);
-
+            this.sendMsgToPlayer.println("\nChoose what to do, " + name);
+            this.sendMsgToPlayer.println("1: Draw | 2: Play Card | 3: Place card in function ");
+            this.sendMsgToPlayer.println("Your hand: " + this.cards);
+            
             int choice;
 
             do  {
-                choice = game.getInput("Action " + (actionsDone + 1), 3);
+                choice = game.getInput("Action " + (actionsDone + 1), 3, this);
             } while (choice < 0);
 
             switch (choice) {
                 case 0: // Draw card
-                    game.serverExecute(new DrawCommand(id));
+                    game.serverExecute(new DrawCommand(this.id));
                     actionsDone++;
                     break;
                 case 1:// Play a card, directly
                     System.out.println("Which card do you want to play?" + this.cards);
-                    choice = game.getInput("Card", this.cards.size());
+                    choice = game.getInput("Card", this.cards.size(), this);
                     if (choice < 0) break;
 
                     System.out.println("You played this card" + this.cards.get(choice));
+                    Player other = this.choosePlayer(playerList);
                     this.playCard(choice, other);
                     actionsDone++;
                     break;
                 case 2: // Place a card in function
                     System.out.println("Which card do you want to place?" + this.cards);
-                    int cardIndex = game.getInput("Card", this.cards.size());
+                    int cardIndex = game.getInput("Card", this.cards.size(), this);
                     if (cardIndex < 0) break;
 
                     System.out.println("In which function should it be placed?" + board.functionCards);
-                    int functionIndex = game.getInput("Function", board.functionCards.size());
+                    int functionIndex = game.getInput("Function", board.functionCards.size(), this);
                     if (functionIndex < 0) break;
 
                     if (board.functionCards.get(functionIndex).cards.size() > 0) {
                         System.out.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
-                        choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1);
+                        choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1, this);
                         if (functionIndex < 0) break;
                     }
                     else {
@@ -121,6 +119,13 @@ public class Player {
         }
     }
 
+    public Player choosePlayer(ArrayList<Player> playerList) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println(playerList);
+        int theChoose = sc.nextInt();
+        return playerList.get(theChoose);
+    }
+    
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
         int functionIndex = 0;
@@ -131,7 +136,7 @@ public class Player {
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesIncrement ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesDecrement)) {
             System.out.println("Which function? " + board.functionCards);
-            functionIndex = game.getInput("Function", board.functionCards.size());
+            functionIndex = game.getInput("Function", board.functionCards.size(), this);
         }
 
         game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));

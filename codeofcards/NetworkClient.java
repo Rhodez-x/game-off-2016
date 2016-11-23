@@ -37,6 +37,7 @@ public class NetworkClient extends Thread{
     @Override
     public void run() {
         System.out.println("It's tour turn");
-        outserver.println(new Scanner(System.in).nextLine()); 
+        this.outserver.println(new Scanner(System.in).nextInt()); 
+        System.out.println("Thread should be finished");
     }
 } 
