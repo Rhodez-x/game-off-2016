@@ -28,7 +28,7 @@ public class NetworkClient extends Thread{
         System.out.println("Create your player: ");
         do {
             outserver.println(new Scanner(System.in).nextLine()); 
-            confirmed = this.userInput.nextLine();
+            confirmed = this.in.nextLine();
         } while (confirmed.equals("false"));
         System.out.println("Waiting for game to start");
         this.input.start();

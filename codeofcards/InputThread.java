@@ -20,10 +20,11 @@ public class InputThread extends Thread{
         String recivedMsg;
         while(true) {
             recivedMsg = this.in.nextLine();
-            
             if (recivedMsg.equals("itsyourturn4322")) {
                 ClientTurn yourTurn = new ClientTurn();
                 client.start();
+            } else {
+                System.out.println(recivedMsg);
             }
         }
     }

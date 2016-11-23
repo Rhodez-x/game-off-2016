@@ -23,6 +23,7 @@ public class Main {
                 //myPlayer.connectToServer();
                 NetworkClient client = new NetworkClient();
                 client.clientStartGame();
+                break;
             } else if (choice == 0) {
                 break;
             }
