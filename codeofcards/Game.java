@@ -12,7 +12,8 @@ import java.util.Scanner;
 public class Game {
     // Singleton :/
     public static Game instance;
-
+    
+    public int playerCount;
     public int currentPlayer;
     public int numPlayers;
     public ArrayList<Player> playerList;
@@ -29,6 +30,7 @@ public class Game {
         this.playerList = new ArrayList<>();
         this.cardfactory = board.cardFactory;
         this.scanner = new Scanner(System.in);
+        this.playerCount = 0;
     }
 
     public void hostGame() {
@@ -62,8 +64,9 @@ public class Game {
     }
     
     public void addPlayer(String playerName) {
-        Player player = new Player(1, playerName, this);
+        Player player = new Player(playerCount, playerName, this);
         this.playerList.add(player);
+        this.playerCount++;
     }
     
     public void shuffelPlayerOrder(ArrayList playerOrder) {
@@ -74,16 +77,18 @@ public class Game {
         instance = this;
         
         System.out.println("Welcome to the game.");
-        
-        for (int i = 0; i < playerList.size(); i++) {
-            System.out.println(players + "Draws five cards");
+        System.out.println(playerList);
+        for (int i = 0; i < this.playerList.size(); i++) {
+            System.out.println(this.playerList.get(i) + "Draws five cards");
             for (int j = 0; j < 5; j++) {
-                this.execute(new DrawCommand(players));
+                System.out.println("Card drawed");
+                this.execute(new DrawCommand(this.playerList.get(i).id));
             }
+            System.out.println("Player hand" + this.playerList.get(i).cards);
         }
         while(true) {
             //playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
-            playerList.get(currentPlayer).turn(playerList.get(currentPlayer));
+            this.playerList.get(this.currentPlayer).turn(this.playerList.get(this.currentPlayer));
             this.changeTurn();
             //currentPlayer = (currentPlayer + 1) % 2;
             //System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
@@ -95,8 +100,8 @@ public class Game {
         System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
     }
 
-    public Player getPlayer(String playerName) {
-        return playerList.get(playerName);
+    public Player getPlayer(int id) {
+        return playerList.get(id);
     }
 
     public void execute(Command command) {

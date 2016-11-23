@@ -28,8 +28,6 @@ public class Player {
         this.life = 30;
         this.game = game;
         this.board = game.board;
-        game.playerOrder.add(this.name);
-        game.playerList.put(this.name, this);
     }
 
     @Override
