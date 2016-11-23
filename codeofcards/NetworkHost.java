@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class NetworkHost extends Thread {
@@ -17,13 +17,14 @@ public class NetworkHost extends Thread {
     public String connectinCode;
     public String password;
     public WhileConnect connectThis;
-    //static public HashMap<String, PrintStream> connectedPlayers = new HashMap<>();
-    static public HashMap<String, Player> ConnectedPlayers = new HashMap<>();
+    public int playerCount;
+    static public ArrayList<Player> ConnectedPlayers = new ArrayList<>();
     
-    NetworkHost(String username) throws IOException {
+    NetworkHost(String username, Game game) throws IOException {
         this.server = new ServerSocket(2343); 
         this.serverRunning = true;
         this.connectThis = new WhileConnect(this.server, this);
+        this.playerCount = 0;
     }
     public void startAddClient() throws InterruptedException, IOException {
         String stopSearching;
@@ -39,8 +40,9 @@ public class NetworkHost extends Thread {
 
     public void addClient(Socket sock, String playerName) throws IOException, InterruptedException {
         System.out.println("Client added");
-        Player player = new Player(5, playerName, Main.game);
-        ConnectedPlayers.put("Player", player);
+        Player player = new Player(this.playerCount, playerName, Main.game);
+        ConnectedPlayers.add(player);
+        this.playerCount++;
         /*this.socket = sock;
         this.in = new Scanner(sock.getInputStream());
         this.serverPrint = new PrintStream(sock.getOutputStream());
@@ -50,6 +52,7 @@ public class NetworkHost extends Thread {
     public void stopAddClient(ServerSocket server) throws InterruptedException, IOException{
         connectThis.searching = false;
         server.close();
+        Main.game.setupNetworkGame(NetworkHost.ConnectedPlayers, this.playerCount);
     }
 
     /*while (true) { 

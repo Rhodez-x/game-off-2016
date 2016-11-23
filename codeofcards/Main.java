@@ -15,8 +15,8 @@ public class Main {
                 game.setupGame();
             } else if (choice == 2) {
                 System.out.println("Starting game with you as host");
-                NetworkHost gameServer = new NetworkHost("PalyerName");
-                gameServer.startAddClient();
+                game = new Game();
+                game.hostGame();
             } else if (choice == 3) {
                 System.out.println("Connect a game");
                 Player myPlayer = new Player();

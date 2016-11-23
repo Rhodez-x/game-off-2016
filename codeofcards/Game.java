@@ -3,6 +3,7 @@ package codeofcards;
 import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +34,10 @@ public class Game {
         this.playerCount = 0;
     }
 
-    public void hostGame() {
+    public void hostGame() throws IOException, InterruptedException {
         isHost = true;
-        this.setupNetworkGame();
+        NetworkHost gameServer = new NetworkHost("gameTitel", this);
+        gameServer.startAddClient();
     }
     
     public void setupGame() {
@@ -59,8 +61,13 @@ public class Game {
         this.runGame();
     }
     
-    public void setupNetworkGame() {
-        
+    public void setupNetworkGame(ArrayList<Player> players, int playerCount) {
+        System.out.println("Enter your own playername:");
+        String playerName = this.scanner.next();
+        Player player = new Player(playerCount, playerName, this);
+        players.add(player);
+        this.playerList = players;
+        this.runGame();
     }
     
     public void addPlayer(String playerName) {
@@ -71,6 +78,28 @@ public class Game {
     
     public void shuffelPlayerOrder(ArrayList playerOrder) {
         // has to shuffel the starting order of the players
+    }
+    
+    public void runNetworkGame() {
+        instance = this;
+        
+        System.out.println("Welcome to the game.");
+        System.out.println(playerList);
+        for (int i = 0; i < this.playerList.size(); i++) {
+            System.out.println(this.playerList.get(i) + "Draws five cards");
+            for (int j = 0; j < 5; j++) {
+                System.out.println("Card drawed");
+                this.execute(new DrawCommand(this.playerList.get(i).id));
+            }
+            System.out.println("Player hand" + this.playerList.get(i).cards);
+        }
+        while(true) {
+            //playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
+            this.playerList.get(this.currentPlayer).turn(this.playerList.get(this.currentPlayer));
+            this.changeTurn();
+            //currentPlayer = (currentPlayer + 1) % 2;
+            //System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+        }
     }
     
     public void runGame() {
