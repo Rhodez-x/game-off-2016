@@ -19,8 +19,10 @@ public class Main {
                 game.hostGame();
             } else if (choice == 3) {
                 System.out.println("Connect a game");
-                Player myPlayer = new Player();
-                myPlayer.connectToServer();
+                //Player myPlayer = new Player();
+                //myPlayer.connectToServer();
+                NetworkClient client = new NetworkClient();
+                client.run();
             } else if (choice == 0) {
                 break;
             }

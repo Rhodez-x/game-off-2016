@@ -38,15 +38,13 @@ public class NetworkHost extends Thread {
         } 
     }
 
-    public void addClient(Socket sock, String playerName) throws IOException, InterruptedException {
+    public boolean addClient(Socket sock, String playerName) throws IOException, InterruptedException {
         System.out.println("Client added");
         Player player = new Player(this.playerCount, playerName, Main.game);
         ConnectedPlayers.add(player);
         this.playerCount++;
-        /*this.socket = sock;
-        this.in = new Scanner(sock.getInputStream());
-        this.serverPrint = new PrintStream(sock.getOutputStream());
-        this.connectinCode = this.in.nextLine();*/
+        
+        return true;
     }
     
     public void stopAddClient(ServerSocket server) throws InterruptedException, IOException{

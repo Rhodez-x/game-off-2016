@@ -17,8 +17,7 @@ public class InputThread extends Thread{
     public void run() {
         ActionEvent a = new ActionEvent();
         while(true) {
-            // this.conObj.reciveMessage(a, this.in.nextLine()); Her skal et eller andet object modtage beskeden.
-            System.out.println("Besked er kommet ind");
+            System.out.println(this.in.nextLine());
         }
     }
 }
