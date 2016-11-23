@@ -5,19 +5,26 @@ import java.util.Scanner;
 import javafx.event.ActionEvent;
 
 public class InputThread extends Thread{
-    public PrintStream input;
-    public Scanner in;
+    private PrintStream input;
+    private Scanner in;
+    private NetworkClient client;
     
-    InputThread(PrintStream input, Scanner in) {
+    InputThread(PrintStream input, Scanner in, NetworkClient client) {
         this.input = input;
         this.in = in;
+        this.client = client;
     }
     
     @Override
     public void run() {
-        ActionEvent a = new ActionEvent();
+        String recivedMsg;
         while(true) {
-            System.out.println(this.in.nextLine());
+            recivedMsg = this.in.nextLine();
+            
+            if (recivedMsg.equals("itsyourturn4322")) {
+                ClientTurn yourTurn = new ClientTurn();
+                client.start();
+            }
         }
     }
 }

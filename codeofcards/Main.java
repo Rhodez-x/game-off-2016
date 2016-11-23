@@ -7,8 +7,8 @@ public class Main {
     static public Game game;
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
         while(true) {
+            System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
             int choice = sc.nextInt();
             if (choice == 1) {
                 game = new Game();
@@ -22,7 +22,7 @@ public class Main {
                 //Player myPlayer = new Player();
                 //myPlayer.connectToServer();
                 NetworkClient client = new NetworkClient();
-                client.run();
+                client.clientStartGame();
             } else if (choice == 0) {
                 break;
             }

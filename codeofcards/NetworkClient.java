@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class NetworkClient { 
+public class NetworkClient extends Thread{ 
     
         public boolean running;
         public String msg;
@@ -16,21 +16,27 @@ public class NetworkClient {
         public PrintStream outserver;
         public InputThread input;
         
-    public void run() throws IOException {
+    public void clientStartGame() throws IOException {
         this.sock = new Socket("127.0.0.1", 2343); 
         this.in = new Scanner(sock.getInputStream());
         this.userInput = new Scanner(System.in);
         this.outserver = new PrintStream(sock.getOutputStream());
-        this.input = new InputThread(this.outserver, this.in);
-        this.input.start();
+        this.input = new InputThread(this.outserver, this.in, this);
         String confirmed = "false";
-        //out.println(new Scanner(System.in).nextLine()); 
+        
         System.out.println("I'am connected :D");
         System.out.println("Create your player: ");
         do {
-            outserver.println(this.userInput.nextLine());
-             
+            outserver.println(new Scanner(System.in).nextLine()); 
+            confirmed = this.userInput.nextLine();
         } while (confirmed.equals("false"));
         System.out.println("Waiting for game to start");
+        this.input.start();
     }   
+    
+    @Override
+    public void run() {
+        System.out.println("It's tour turn");
+        outserver.println(new Scanner(System.in).nextLine()); 
+    }
 } 

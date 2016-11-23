@@ -40,7 +40,7 @@ public class Game {
         gameServer.startAddClient();
     }
     
-    public void setupGame() {
+    public void setupGame() throws IOException {
         boolean askForPlayers = true;
         String playerName;
         String again;
@@ -61,17 +61,17 @@ public class Game {
         this.runGame();
     }
     
-    public void setupNetworkGame(ArrayList<Player> players, int playerCount) {
-        System.out.println("Enter your own playername:");
-        String playerName = this.scanner.next();
-        Player player = new Player(playerCount, playerName, this);
-        players.add(player);
+    public void setupNetworkGame(ArrayList<Player> players, int playerCount) throws IOException {
+        System.out.println("Setting up game:");
+        //String playerName = this.scanner.next();
+        //Player player = new Player(playerCount, playerName, this, null);
+        //players.add(player);
         this.playerList = players;
-        this.runGame();
+        this.runNetworkGame();
     }
     
-    public void addPlayer(String playerName) {
-        Player player = new Player(playerCount, playerName, this);
+    public void addPlayer(String playerName) throws IOException {
+        Player player = new Player(playerCount, playerName, this, null);
         this.playerList.add(player);
         this.playerCount++;
     }
@@ -82,6 +82,9 @@ public class Game {
     
     public void runNetworkGame() {
         instance = this;
+        for (Player players : playerList) {
+            players.sendMsgToPlayer.println("Welcome to this network game. :D");
+        }
         
         System.out.println("Welcome to the game.");
         System.out.println(playerList);

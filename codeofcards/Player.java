@@ -12,6 +12,8 @@ import java.util.*;
 public class Player {
     public int id;
     public String name;
+    public Socket playerSocket;
+    public PrintStream sendMsgToPlayer;
     private Game game;
     private Board board;
     public int life;
@@ -22,12 +24,14 @@ public class Player {
     Player() {
         
     }
-    Player(int id, String name, Game game) {
+    Player(int id, String name, Game game, Socket playerSocket) throws IOException {
         this.id = id;
         this.name = name;
         this.life = 30;
         this.game = game;
         this.board = game.board;
+        this.playerSocket = playerSocket;
+        this.sendMsgToPlayer = new PrintStream(this.playerSocket.getOutputStream());
     }
 
     @Override

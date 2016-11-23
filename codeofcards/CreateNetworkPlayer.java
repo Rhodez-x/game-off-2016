@@ -23,7 +23,6 @@ public class CreateNetworkPlayer extends Thread {
     @Override
     public void run() {
         while(true) {
-            this.output.println("Enter username: ");
             String username = this.inputScanner.nextLine();
             boolean check = false;
             try {
@@ -40,7 +39,7 @@ public class CreateNetworkPlayer extends Thread {
                 this.output.println("false");
             }
         }
-        
+        System.out.println("Createnetworkplayer thread is finished");
     }
     
 }

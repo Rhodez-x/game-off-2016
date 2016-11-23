@@ -34,13 +34,15 @@ public class NetworkHost extends Thread {
         System.out.println("Write 'stop' for stop searching for players");
         stopSearching = sc.next();
         if (stopSearching.equals("stop")) {
+            NetworkClient client = new NetworkClient();
+            client.clientStartGame();
             this.stopAddClient(server);
         } 
     }
 
     public boolean addClient(Socket sock, String playerName) throws IOException, InterruptedException {
         System.out.println("Client added");
-        Player player = new Player(this.playerCount, playerName, Main.game);
+        Player player = new Player(this.playerCount, playerName, Main.game, sock);
         ConnectedPlayers.add(player);
         this.playerCount++;
         
