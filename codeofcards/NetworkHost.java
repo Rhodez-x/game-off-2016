@@ -31,8 +31,10 @@ public class NetworkHost extends Thread {
         Scanner sc = new Scanner(System.in);
         this.connectThis.start();
         System.out.println("Wating for clients to connect");
-        System.out.println("Write 'stop' for stop searching for players");
-        stopSearching = sc.next();
+        do {
+            System.out.println("Write 'stop' for stop searching for players");
+            stopSearching = sc.next();
+        } while(!stopSearching.equals("stop"));
         if (stopSearching.equals("stop")) {
             NetworkClient client = new NetworkClient();
             client.clientStartGame();

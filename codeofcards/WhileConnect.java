@@ -30,7 +30,7 @@ public class WhileConnect extends Thread{
                 //this.serverClass.addClient(socket, "networkPlayer");
                 System.out.println("A Player is connected");
             } catch (IOException ex) {
-                Logger.getLogger(WhileConnect.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(WhileConnect.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

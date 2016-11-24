@@ -134,10 +134,6 @@ public class Game {
         command.execute(this);
     }
 
-    public void sendCommand(Command command) {
-
-    }
-
     public void serverExecute(Command command) {
         if (isHost) {
             command.execute(this);
@@ -150,7 +146,7 @@ public class Game {
         while(choice < 0 || choice > maxChoice + 1) {
             player.sendMsgToPlayer.println("itsyourturn4322");
             player.sendMsgToPlayer.format("%s [1-%d]", text, maxChoice);
-            choice = Integer.parseInt(player.playersInput.next());
+            choice = (player.playersInput.nextInt());
         }
         
         return choice - 1;
