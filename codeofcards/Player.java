@@ -120,9 +120,8 @@ public class Player {
     }
 
     public Player choosePlayer(ArrayList<Player> playerList) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println(playerList);
-        int theChoose = sc.nextInt();
+        this.sendMsgToPlayer.println(playerList);
+        int theChoose = game.getInput("Card", cards.size(), this);
         return playerList.get(theChoose);
     }
     
@@ -135,11 +134,11 @@ public class Player {
                  ((StatementCard) card).statementType == StatementCard.StatementType.OtherExecuteFunction ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesIncrement ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesDecrement)) {
-            System.out.println("Which function? " + board.functionCards);
+            this.sendMsgToPlayer.println("Which function? " + board.functionCards);
             functionIndex = game.getInput("Function", board.functionCards.size(), this);
         }
 
-        game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));
+        game.serverExecute(new PlayCardCommand(this.id, other.id, card, functionIndex));
     }
 
     void playCardToFunction() { // CodeOfCards.Player lay a card to a function
