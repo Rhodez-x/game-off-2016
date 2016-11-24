@@ -3,12 +3,18 @@ package codeofcards;
 import codeofcards.cards.Card;
 import codeofcards.cards.StatementCard;
 import codeofcards.commands.*;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 
 import java.util.*;
 
 public class Player {
     public int id;
     public String name;
+    public Socket playerSocket;
+    public PrintStream sendMsgToPlayer;
+    public Scanner playersInput;
     private Game game;
     private Board board;
     public int life;
@@ -16,12 +22,18 @@ public class Player {
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
     public ArrayList<Card> cards = new ArrayList<>();
 
-    Player(int id, String name, int life, Game game) {
+    Player() {
+        
+    }
+    Player(int id, String name, Game game, Socket playerSocket) throws IOException {
         this.id = id;
         this.name = name;
-        this.life = life;
+        this.life = 30;
         this.game = game;
         this.board = game.board;
+        this.playerSocket = playerSocket;
+        this.sendMsgToPlayer = new PrintStream(this.playerSocket.getOutputStream());
+        this.playersInput = new Scanner(this.playerSocket.getInputStream());
     }
 
     @Override
@@ -29,12 +41,12 @@ public class Player {
         return this.name;
     }
 
-    public void turn(Player other) {
+    public void turn(ArrayList<Player> playerList) {
         //board.onTurnStart(this);
 
         while (discardCount > 0) {
-            System.out.format("You must discard %d cards. Choose card to discard %s\n", discardCount, cards);
-            int choice = game.getInput("Card", cards.size());
+            this.sendMsgToPlayer.format("You must discard %d cards. Choose card to discard %s\n", discardCount, cards);
+            int choice = game.getInput("Card", cards.size(), this);
 
             if (choice < 0) continue;
 
@@ -45,49 +57,53 @@ public class Player {
         int actionsDone = 0;
 
         while(actionsDone < 3){
-            System.out.format("%s: %2d | %s: %2d\n", name, life, other.name, other.life);
+            for (Player players : playerList) {
+                System.out.format("%s: %2d | %s: %2d\n", name, life, players.name, players.life);
+            }
+    
 
-            System.out.println("Board:");
+            this.sendMsgToPlayer.println("Board:");
             for (int j = 0; j < board.functionCards.size(); j++) {
-                System.out.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
+                this.sendMsgToPlayer.format("%s: %s\n", j, board.functionCards.get(j), board.functionCards.get(j).cards);
             }
 
-            System.out.println("\nChoose what to do, " + name);
-            System.out.println("1: Draw | 2: Play Card | 3: Place card in function ");
-            System.out.println("Your hand: " + this.cards);
-
+            this.sendMsgToPlayer.println("\nChoose what to do, " + name);
+            this.sendMsgToPlayer.println("1: Draw | 2: Play Card | 3: Place card in function ");
+            this.sendMsgToPlayer.println("Your hand: " + this.cards);
+            
             int choice;
 
             do  {
-                choice = game.getInput("Action " + (actionsDone + 1), 3);
+                choice = game.getInput("Action " + (actionsDone + 1), 3, this);
             } while (choice < 0);
 
             switch (choice) {
                 case 0: // Draw card
-                    game.serverExecute(new DrawCommand(id));
+                    game.serverExecute(new DrawCommand(this.id));
                     actionsDone++;
                     break;
                 case 1:// Play a card, directly
-                    System.out.println("Which card do you want to play?" + this.cards);
-                    choice = game.getInput("Card", this.cards.size());
+                    this.sendMsgToPlayer.println("Which card do you want to play?" + this.cards);
+                    choice = game.getInput("Card", this.cards.size(), this);
                     if (choice < 0) break;
 
-                    System.out.println("You played this card" + this.cards.get(choice));
+                    this.sendMsgToPlayer.println("You played this card" + this.cards.get(choice));
+                    Player other = this.choosePlayer(playerList);
                     this.playCard(choice, other);
                     actionsDone++;
                     break;
                 case 2: // Place a card in function
-                    System.out.println("Which card do you want to place?" + this.cards);
-                    int cardIndex = game.getInput("Card", this.cards.size());
+                    this.sendMsgToPlayer.println("Which card do you want to place?" + this.cards);
+                    int cardIndex = game.getInput("Card", this.cards.size(), this);
                     if (cardIndex < 0) break;
 
-                    System.out.println("In which function should it be placed?" + board.functionCards);
-                    int functionIndex = game.getInput("Function", board.functionCards.size());
+                    this.sendMsgToPlayer.println("In which function should it be placed?" + board.functionCards);
+                    int functionIndex = game.getInput("Function", board.functionCards.size(), this);
                     if (functionIndex < 0) break;
 
                     if (board.functionCards.get(functionIndex).cards.size() > 0) {
-                        System.out.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
-                        choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1);
+                        this.sendMsgToPlayer.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
+                        choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1, this);
                         if (functionIndex < 0) break;
                     }
                     else {
@@ -103,6 +119,13 @@ public class Player {
         }
     }
 
+    public Player choosePlayer(ArrayList<Player> playerList) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println(playerList);
+        int theChoose = sc.nextInt();
+        return playerList.get(theChoose);
+    }
+    
     void playCard(int cardIndex, Player other) { // Directplay (not lay card in a function on the table)
         Card card = cards.get(cardIndex);
         int functionIndex = 0;
@@ -113,7 +136,7 @@ public class Player {
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesIncrement ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesDecrement)) {
             System.out.println("Which function? " + board.functionCards);
-            functionIndex = game.getInput("Function", board.functionCards.size());
+            functionIndex = game.getInput("Function", board.functionCards.size(), this);
         }
 
         game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));

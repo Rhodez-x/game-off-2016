@@ -3,75 +3,130 @@ package codeofcards;
 import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Game {
     // Singleton :/
     public static Game instance;
-
+    
+    public int playerCount;
     public int currentPlayer;
-    public ArrayList<Player> playerList = new ArrayList<>();
+    public int numPlayers;
+    public ArrayList<Player> playerList;
     public Board board;
     public CardFactory cardfactory;
-
     public boolean isHost = false;
 
     public ArrayList<Command> commandQueue = new ArrayList<>();
+
+    public Scanner scanner;
     
     public Game() {
         this.board = new Board();
+        this.playerList = new ArrayList<>();
         this.cardfactory = board.cardFactory;
+        this.scanner = new Scanner(System.in);
+        this.playerCount = 0;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to CodeOfCards, \n 1 = start local game \n 2 = Start game as host \n 3 = Connect a game \n anything else = exit game");
-        int choice = sc.nextInt();
-        sc.close();
-        if (choice == 1) {
-            Game game = new Game();
-            game.hostGame();
-        } else if (choice == 2) {
-            System.out.println("Starting game with you as host");
-        } else if (choice == 3) {
-            System.out.println("Connect a game");
-        } else {
-            
+    public void hostGame() throws IOException, InterruptedException {
+        isHost = true;
+        NetworkHost gameServer = new NetworkHost("gameTitel", this);
+        gameServer.startAddClient();
+    }
+    
+    public void setupGame() throws IOException {
+        boolean askForPlayers = true;
+        String playerName;
+        String again;
+        do {
+            System.out.println("Add new player \n Enter playername:");
+            playerName = this.scanner.next();
+            this.addPlayer(playerName);
+            System.out.println("Add another player? y/n");
+            again = this.scanner.next();
+            if (again.equals("y")) {
+                playerName = null;
+            } else {
+                askForPlayers = false;
+            }
+        } while(askForPlayers);
+        this.shuffelPlayerOrder(playerList);
+        this.currentPlayer = 0;
+        this.runGame();
+    }
+    
+    public void setupNetworkGame(ArrayList<Player> players, int playerCount) throws IOException {
+        System.out.println("Setting up game:");
+        this.playerList = players;
+        this.currentPlayer = 0;
+        this.runNetworkGame();
+    }
+    
+    public void addPlayer(String playerName) throws IOException {
+        Player player = new Player(playerCount, playerName, this, null);
+        this.playerList.add(player);
+        this.playerCount++;
+    }
+    
+    public void shuffelPlayerOrder(ArrayList playerOrder) {
+        // has to shuffel the starting order of the players
+    }
+    
+    public void runNetworkGame() {
+        instance = this;
+        for (Player players : playerList) {
+            players.sendMsgToPlayer.println("Welcome to this network game. :D");
+            players.sendMsgToPlayer.println(playerList);
+        }
+        
+        for (int i = 0; i < this.playerList.size(); i++) {
+            communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
+            for (int j = 0; j < 5; j++) {
+                this.execute(new DrawCommand(this.playerList.get(i).id));
+            }
+        }
+        while(true) {
+            this.playerList.get(this.currentPlayer).turn(playerList);
+            this.changeTurn();
         }
     }
-
-    public void hostGame() {
-        isHost = true;
-        runGame();
+    
+    public void communicateWithNetworkPlayers(ArrayList<Player> playerList, String msg) {
+        for (Player players : playerList) {
+            players.sendMsgToPlayer.println(msg);
+        }
     }
     
     public void runGame() {
         instance = this;
-
-        System.out.println("Welcome to the game.");
-        Player player1 = new Player(0, "Monty Python", 50, this);
-        Player player2 = new Player(1, "Marilyn Monroe", 50, this);
-
-        playerList.add(player1);
-        playerList.add(player2);
-
-        for (int i = 0; i < 5; i++) {
-            execute(new DrawCommand(player1.id));
-            execute(new DrawCommand(player2.id));
+        
+        communicateWithNetworkPlayers(this.playerList, "Welcome to the game.");
+        //communicateWithNetworkPlayers(this.playerList, this.playerList);
+        for (int i = 0; i < this.playerList.size(); i++) {
+            communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
+            for (int j = 0; j < 5; j++) {
+                this.execute(new DrawCommand(this.playerList.get(i).id));
+            }
+            communicateWithNetworkPlayers(this.playerList, "Player hand" + this.playerList.get(i).cards);
         }
-
-        currentPlayer = 0;
         while(true) {
-            playerList.get(currentPlayer).turn(playerList.get(currentPlayer == 0 ? 1 : 0));
-            currentPlayer = (currentPlayer + 1) % 2;
-            System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+            this.playerList.get(this.currentPlayer).turn(this.playerList);
+            this.changeTurn();
         }
     }
+    
+    public void changeTurn() {
+        communicateWithNetworkPlayers(playerList, "//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+        this.currentPlayer = (this.currentPlayer + 1)%playerList.size();
+    }
 
-    public Player getPlayer(int playerId) {
-        return playerList.get(playerId);
+    public Player getPlayer(int id) {
+        return playerList.get(id);
     }
 
     public void execute(Command command) {
@@ -89,16 +144,15 @@ public class Game {
         }
     }
 
-    public int getInput(String text, int maxChoice) {
+    public int getInput(String text, int maxChoice, Player player) {
         int choice = -1;
-        Scanner sc = new Scanner(System.in);
 
         while(choice < 0 || choice > maxChoice + 1) {
-            System.out.format("%s [1-%d]", text, maxChoice);
-            choice = sc.nextInt();
+            player.sendMsgToPlayer.println("itsyourturn4322");
+            player.sendMsgToPlayer.format("%s [1-%d]", text, maxChoice);
+            choice = Integer.parseInt(player.playersInput.next());
         }
-        sc.close();
-
+        
         return choice - 1;
     }
 }
