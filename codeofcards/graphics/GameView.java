@@ -12,7 +12,7 @@ public class GameView extends PApplet {
 
 	public PFont labelFont;
 	
-	public final float cardHeight = 50;
+	public final float cardHeight = 32;
 	public final float cardWidth = 300;
 	public final float halfCardHeight = 0.5f*cardHeight;
 	public final float paddingX = 10;
@@ -98,8 +98,11 @@ public class GameView extends PApplet {
 	public RepeatCard rc2;
 
 	public CardViewNode root;
+	public CardViewTree tree;
 	
 	public void setup() {
+		surface.setResizable(true);
+		
 		fc = new FunctionCard("Function", 5, 10);
 		fc.pushCard(new StatementCard("other.discardCard()", 5, StatementCard.StatementType.OtherDiscardCard));
 		fc.pushCard(new StatementCard("function.cycles++", 5, StatementCard.StatementType.CyclesIncrement));
@@ -114,7 +117,9 @@ public class GameView extends PApplet {
 		fc.pushCard(rc2);
 		fc.pushCard(rc2);
 		
-		root = new CardViewNode(fc, 100, 60, null);
+		root = new CardViewNode(fc);
+		
+		tree = new CardViewTree(root, 100, 100);
 		
 		labelFont = loadFont("RobotoCondensed-Regular-23.vlw");
 		textFont(labelFont);
@@ -130,82 +135,94 @@ public class GameView extends PApplet {
 	
 	public PGraphics g;
 	
-	CardViewNode clickedNode;
+	CardViewNode clickedNode = null;
 	boolean lastMousePressed = false;
 	
 	boolean beginDrag = false;
-	
+
 	public void draw() {
-		
-		background(100);
-		
-		if (!root.gettingDragged)
-			root.draw(g);
-		
-		if (clickedNode != null) {
-			if (dragging) {
-				clickedNode.draw(g, mouseX + cox, mouseY + coy, true);	
-			}
-			else {
-				clickedNode.draw(g, true);
-			}
-			if (!mousePressed && lastMousePressed) {	
-				clickedNode.gettingDragged = false;
-				clickedNode = null;
-				beginDrag = false;
-				dragging = false;
-			}
-		}
-		
-		if (beginDrag) {
-			float dx = mouseX - cx;
-			float dy = mouseY - cy;
-			
-			if (dx*dx + dy*dy > 2500) {
-				clickedNode.gettingDragged = true;
-				beginDrag = false;
-				dragging = true;
-			}
-		}
-		
-		if (mousePressed && !lastMousePressed) {
-			
-			clickedNode = root.getClickedNode(mouseX, mouseY);
-			if (clickedNode != null) {
-				cox = clickedNode.left() - mouseX;
-				coy = clickedNode.top() - mouseY;
-				cx = mouseX;
-				cy = mouseY;
-				beginDrag = true;
-			}
-		}
-		
+		background(50);
+//		if (clickedNode == null && mousePressed && !lastMousePressed) {
+			clickedNode = tree.getClickedNode(mouseX, mouseY);
+//		}
+//		else if (clickedNode != null && !mousePressed && lastMousePressed) {
+//			clickedNode = null;
+//		}
 		lastMousePressed = mousePressed;
-		
-		
-//		background(100);
-//		if (mousePressed) {
-//			if (!dragging &&
-//					mouseX >= cx && mouseX <= cx + cardWidth &&
-//					mouseY >= cy && mouseY <= cy + getDrawHeight(fc)) {
-//				dragging = true;
-//				cox = mouseX - cx;
-//				coy = mouseY - cy;
-//			}
-//		}
-//		
-//		if(dragging) {
-//			if(!mousePressed) {
-//				dragging = false;
-//			} else {
-//				cx = mouseX - cox;
-//				cy = mouseY - coy;
-//			}
-//		}
-//		
-//		drawCard(fc, cx, cy);
-//		drawCard(rc2, cx, cy);
+		tree.draw(g, clickedNode);
 	}
+	
+//	public void draw() {
+//		
+//		background(0xffaaaaaa);
+//		
+//		if (!root.hidden)
+//			root.draw(g);
+//		
+//		if (clickedNode != null) {
+//			if (dragging) {
+//				clickedNode.draw(g, mouseX + cox, mouseY + coy, true);	
+//			}
+//			else {
+//				clickedNode.draw(g, true);
+//			}
+//			if (!mousePressed && lastMousePressed) {	
+//				clickedNode.hidden = false;
+//				clickedNode = null;
+//				beginDrag = false;
+//				dragging = false;
+//			}
+//		}
+//		
+//		if (beginDrag) {
+//			float dx = mouseX - cx;
+//			float dy = mouseY - cy;
+//			
+//			if (dx*dx + dy*dy > 2500) {
+//				clickedNode.hidden = true;
+//				beginDrag = false;
+//				dragging = true;
+//			}
+//		}
+//		
+//		if (mousePressed && !lastMousePressed) {
+//			
+//			clickedNode = root.getClickedNode(mouseX, mouseY);
+//			if (clickedNode != null) {
+//				cox = clickedNode.left() - mouseX;
+//				coy = clickedNode.top() - mouseY;
+//				cx = mouseX;
+//				cy = mouseY;
+//				beginDrag = true;
+//			}
+//		}
+//		
+//		lastMousePressed = mousePressed;
+//		
+//		
+////		background(100);
+////		if (mousePressed) {
+////			if (!dragging &&
+////					mouseX >= cx && mouseX <= cx + cardWidth &&
+////					mouseY >= cy && mouseY <= cy + getDrawHeight(fc)) {
+////				dragging = true;
+////				cox = mouseX - cx;
+////				coy = mouseY - cy;
+////			}
+////		}
+////		
+////		if(dragging) {
+////			if(!mousePressed) {
+////				dragging = false;
+////			} else {
+////				cx = mouseX - cox;
+////				cy = mouseY - coy;
+////			}
+////		}
+////		
+////		drawCard(fc, cx, cy);
+////		drawCard(rc2, cx, cy);
+//	}
 
 	public GameView() {
 		this.game = new Game();

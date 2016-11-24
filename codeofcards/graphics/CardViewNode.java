@@ -5,227 +5,151 @@ import codeofcards.cards.*;
 import processing.core.*;
 
 public class CardViewNode {
-	
-	public static int color(int a, int r, int g, int b) {
-		a = Math.min(255, Math.max(0, a));
-		r = Math.min(255, Math.max(0, r));
-		g = Math.min(255, Math.max(0, g));
-		b = Math.min(255, Math.max(0, b));
-		return (a << 24) | (r << 16) | (g << 8) | b;
-	}
-	
-	public static int color(int r, int g, int b) {
-		return color(255, r, g, b);
-	}
-	
-	public static int colorBrighten(int col, int val) {
-		int a, r, g, b;
-		b = (col & 0xff) + val; col >>= 8;
-		g = (col & 0xff) + val; col >>= 8;
-		r = (col & 0xff) + val; col >>= 8;
-		a = (col & 0xff);
-		return color(a, r, g, b);
-	}
-	
-	final static float inv255 = 0.00392156862745098f;
-	
-	public static int colorMult(int col1, int col2) {
-		float a1, r1, g1, b1;
-		float a2, r2, g2, b2;
-		
-		b1 = (col1 & 255)*inv255; col1 >>= 8;
-		g1 = (col1 & 255)*inv255; col1 >>= 8;
-		r1 = (col1 & 255)*inv255; col1 >>= 8;
-		a1 = (col1 & 255)*inv255;
-		
-		b2 = (col2 & 255)*inv255; col2 >>= 8;
-		g2 = (col2 & 255)*inv255; col2 >>= 8;
-		r2 = (col2 & 255)*inv255; col2 >>= 8;
-		a2 = (col2 & 255)*inv255;
-		
-		return color((int)(a1 * a2 * 255), (int)(r1 * r2 * 255), (int)(g1 * g2 * 255), (int)(b1 * b2 * 255));
-	}
-	
-	public static int colorLerp(int col1, int col2, float t) {
-		int a1, r1, g1, b1;
-		int a2, r2, g2, b2;
-		int ar, rr, gr, br;
-		
-		b1 = (col1 & 255); col1 >>= 8;
-		g1 = (col1 & 255); col1 >>= 8;
-		r1 = (col1 & 255); col1 >>= 8;
-		a1 = (col1 & 255);
-		
-		b2 = (col2 & 255); col2 >>= 8;
-		g2 = (col2 & 255); col2 >>= 8;
-		r2 = (col2 & 255); col2 >>= 8;
-		a2 = (col2 & 255);
-		
-		ar = (int)(a1 + t*(a2 - a1));
-		rr = (int)(r1 + t*(r2 - r1));
-		gr = (int)(g1 + t*(g2 - g1));
-		br = (int)(b1 + t*(b2 - b1));
-		
-		return color(ar, rr, gr, br);
-	}
-	
-	public static int colorDarken(int col, int val) {
-		return colorBrighten(col, -val);
-	}
-
 	public static float cardWidth = 300;
-	public static float cardHeight = 50;
+	public static float cardHeight = 32;
 	public static float halfCardHeight = cardHeight*0.5f;
-	public static float paddingX = 10;
+	public static float paddingX = 16;
 	public static float paddingY = 16;
 	
-	public static int functionCardFill = color(156, 196, 246);
-	public static int statementCardFill = color(240, 240, 240);
-	public static int controlFlowCardFill = color(250, 200, 180);
-	public static int functionCardStroke = colorDarken(functionCardFill, 120);
-	public static int statementCardStroke = colorDarken(statementCardFill, 120);
-	public static int controlFlowCardStroke = colorDarken(controlFlowCardFill, 120);
+	public static Color functionCardFill = Color.fromInts(255, 156, 196, 246);
+	public static Color statementCardFill = Color.fromInts(255, 240, 240, 240);
+	public static Color controlFlowCardFill = Color.fromInts(255, 250, 200, 180);
+	public static Color functionCardFillInv = functionCardFill.inv();
+	public static Color statementCardFillInv = statementCardFill.inv();
+	public static Color controlFlowCardFillInv = controlFlowCardFill.inv();
 	
-	public float offsetX, offsetY;
-//	public int childIndex;
+	public static Color functionCardStroke = functionCardFill.lerp(Color.black, 0.6f);
+	public static Color statementCardStroke = statementCardFill.lerp(Color.black, 0.6f);
+	public static Color controlFlowCardStroke = controlFlowCardFill.lerp(Color.black, 0.6f);
+	
 	public Card card;
-	public CardViewNode parent;
-	public CardViewNode rootParent;
 	public ArrayList<CardViewNode> children;
-	public float drawHeight;
 	public int fillColor;
-	public int nestLevel;
+	public int activeFillColor;
 	public int strokeColor;
-	public boolean gettingDragged;
-	public float x, y;
-	
-	public CardViewNode(Card card) { this(card, 0, 0, null); }
-	public CardViewNode(Card card, float x, float y, CardViewNode parent) {
+	public boolean hidden;
+	public boolean isLeaf;
+	public boolean dirty;
+	public BoundsRect relativeBounds;
+
+	public CardViewNode(Card card) { this(card, 0, 0); }
+	public CardViewNode(Card card, float xAt, float yAt) {
 		this.card = card;
 		this.children = new ArrayList<CardViewNode>();
-		this.parent = parent;
-//		this.rootParent = (parent != null) ? ((parent.rootParent != null) ? parent.rootParent : parent) : null;
-		this.gettingDragged = false;
-//		this.nestLevel = nestLevel;
-		this.x = x;
-		this.y = y;
-		
-		if (card instanceof FlowCard) {
+		this.hidden = false;
+		this.dirty = true;
+		this.isLeaf = !(card instanceof FlowCard);
+
+		if (!isLeaf) {
+
 			if (card instanceof RepeatCard) {
-				this.fillColor = controlFlowCardFill;
-				this.strokeColor = controlFlowCardStroke;
+				this.fillColor = controlFlowCardFill.toInt();
+				this.activeFillColor = controlFlowCardFillInv.toInt();
+				this.strokeColor = controlFlowCardStroke.toInt();
+
 			}
 			else {
-				this.fillColor = functionCardFill;
-				this.strokeColor = functionCardStroke;
+				this.fillColor = functionCardFill.toInt();
+				this.activeFillColor = functionCardFillInv.toInt();
+				this.strokeColor = functionCardStroke.toInt();
 			}
 			
-			this.drawHeight = cardHeight;
-//			int childIndex = 0;
 			for (Card c : ((FlowCard)card).cards) {
-				CardViewNode childNode = new CardViewNode(c, x + paddingX, y + drawHeight, this);
+				CardViewNode childNode = new CardViewNode(c, xAt, yAt);
 				this.children.add(childNode);
-//				childNode.childIndex = childIndex++;
-				this.drawHeight += childNode.drawHeight;
 			}
-			this.drawHeight += paddingY;
 		}
 		else {
-			this.fillColor = statementCardFill;
-			this.strokeColor = statementCardStroke;
-			
-			this.drawHeight = cardHeight;
+			this.fillColor = statementCardFill.toInt();
+			this.activeFillColor = statementCardFillInv.toInt();
+			this.strokeColor = statementCardStroke.toInt();
 		}
 	}
-	
-	public float left() { return x; }
-	public float right() { return x + cardWidth; }
-	public float top() { return y; }
-	public float bottom() { return y + drawHeight; }
-	public boolean pointInside(float px, float py) {
-		return (px >= left() &&
-				px <= right() &&
-				py >= top() &&
-				py <= bottom());
-	}
-	
-	public float getDrawHeight() {
-		if (children.isEmpty()) {
-			return cardHeight;
-		}
+
+	public float calculateBounds() { return calculateBounds(0, 0); }
+	public float calculateBounds(float xAt, float yAt) {
 		
-		float result = cardHeight + paddingY;
-		for (CardViewNode c : children) {
-			if (c.gettingDragged) continue;
+		float dynHeight = cardHeight;
+
+		if (isLeaf) {
+			this.relativeBounds = new BoundsRect(xAt, yAt, cardWidth, dynHeight);
+		}
+		else {	
+			for (CardViewNode c : children) {
+				if (c.hidden) continue;
+				
+				dynHeight += c.calculateBounds(xAt + paddingX, yAt + dynHeight);
+			}
+
+			dynHeight += paddingY;
 			
-			result += c.getDrawHeight();
+			dynHeight = Math.max(dynHeight, cardHeight + 2*paddingY);
+
+			this.relativeBounds = new BoundsRect(xAt, yAt, cardWidth, dynHeight);
 		}
 		
-		return Math.max(result, cardHeight + 2*paddingY);
+		this.dirty = false;
+		return dynHeight;
 	}
 	
 	public CardViewNode getClickedNode(float clickX, float clickY) {
 		
 		CardViewNode result = null;
-		
-		for (CardViewNode c : children) {
-			result = c.getClickedNode(clickX, clickY);
-			if (result != null) {
-				break;
+
+		if (!isLeaf) {
+			for (CardViewNode c : children) {
+				if (c.hidden) {
+					continue;
+				}
+				result = c.getClickedNode(clickX, clickY);
+				if (result != null) {
+					return result;
+				}
 			}
 		}
 		
-		if (result == null && pointInside(clickX, clickY)) {
+		if (relativeBounds.pointInside(clickX, clickY)) {
 			result = this;
 		}
 	
 		return result;
 	}
-	
-	public void draw(PGraphics g) {
-		draw(g, x, y, false);
-	}
-	
-	public void draw(PGraphics g, boolean drag) {
-		draw(g, x, y, drag);
-	}
 
-	public void draw(PGraphics g, float x, float y, boolean drag) {
+	public void draw(PGraphics g, float x, float y) { draw(g, x, y, null); }
+	public void draw(PGraphics g, float x, float y, CardViewNode clicked) {
+		boolean selected = clicked != null && this.equals(clicked);
+		
 		g.stroke(strokeColor);
 		
 		g.textAlign(PConstants.LEFT, PConstants.CENTER);
 		g.stroke(0);
 		g.strokeWeight(1);
 		
-		int fillColor = (drag) ? colorDarken(this.fillColor, 0x80) : this.fillColor;
-		int textColor = (drag) ? 255 : 0;
-		float drawHeight = getDrawHeight();
-				
+		int fillColor = (selected) ? this.activeFillColor : this.fillColor;
+		int textColor = (selected) ? 255 : 0;
+
+		float drawX = x + relativeBounds.x;
+		float drawY = y + relativeBounds.y;
+		float drawWidth = relativeBounds.w;
+		float drawHeight = relativeBounds.h;
+
 		g.fill(fillColor);
+		g.rect(drawX, drawY, drawWidth, drawHeight);
 		
-		if (!children.isEmpty()) {
-			g.rect(x, y, cardWidth, Math.max(drawHeight, cardHeight + 2*paddingY));
-			
-			float childrenHeight = cardHeight;
+		if (!isLeaf) {
+
+			g.fill(fillColor & 0xff808080);
+			g.rect(drawX + paddingX, drawY + cardHeight, cardWidth - paddingX, paddingY);
+
 			for (CardViewNode c : children) {
-				if (c.gettingDragged) continue;
-				c.draw(g, x + paddingX, y + childrenHeight, drag);
-				childrenHeight += c.getDrawHeight();
+				if (!c.hidden) {
+					c.draw(g, x, y, selected ? c : clicked);
+				}
 			}
-			
-			if (drawHeight <= cardHeight + 2*paddingY) {
-				g.fill(color(127, 0, 0, 0));
-				g.rect(x + paddingX, y + cardHeight, cardWidth - paddingX, paddingY);
-			}
-		}
-		else {
-			g.rect(x, y, cardWidth, drawHeight);
-		}
-			
-		
+		}		
 		
 		g.fill(textColor);
-		g.text(card.text, x + paddingX, y + halfCardHeight);
+		g.text(card.text, drawX + paddingX, drawY + halfCardHeight);
 		
 		
 	}
