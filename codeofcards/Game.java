@@ -1,5 +1,6 @@
 package codeofcards;
 
+import codeofcards.cards.EventCard;
 import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
@@ -83,6 +84,13 @@ public class Game {
             players.sendMsgToPlayer.println("Welcome to this network game. :D");
             players.sendMsgToPlayer.println(playerList);
         }
+        
+        // makes the standart functionscards to the bord. 
+        // Event cards
+        this.board.addFunctionToBoard(new EventCard("OnTurnStart()", 2, 15, Board.EventType.OnTurnStart));
+        this.board.addFunctionToBoard(new EventCard("OnTurnEnd()", 2, 15, Board.EventType.OnTurnEnd));
+        this.board.addFunctionToBoard(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
+        this.board.addFunctionToBoard(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
         
         for (int i = 0; i < this.playerList.size(); i++) {
             communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
