@@ -37,9 +37,10 @@ public class CardFactory {
         this.cardPrototypes.add(new StatementCard("Function.Cycles--", 3, StatementCard.StatementType.CyclesDecrement));
 
         // Function cards
-        this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
-        this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
-        this.cardPrototypes.add(new FunctionCard("Function", 1, 20));
+        // Dosent exist as cards longer
+        //this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
+        //this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
+        //this.cardPrototypes.add(new FunctionCard("Function", 1, 20));
 
         // Repeat cards
         this.cardPrototypes.add(new RepeatCard("Repeat 3", 3, 3));
