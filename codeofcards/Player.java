@@ -130,7 +130,7 @@ public class Player {
                         choice = 0;
                     }
 
-                    game.serverExecute(new AddCardToFunctionCommand(id, cards.get(cardIndex), functionIndex, choice));
+                    game.serverExecute(new AddCardToFunctionCommand(id, cards.get(cardIndex), functionIndex, choice, choosenBoard));
                     actionsDone++;
                     break;
                 default: // CodeOfCards.Player chooise a worng number.
