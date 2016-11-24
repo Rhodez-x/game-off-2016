@@ -105,23 +105,24 @@ public class Game {
     public void runGame() {
         instance = this;
         
-        System.out.println("Welcome to the game.");
-        System.out.println(playerList);
+        communicateWithNetworkPlayers(this.playerList, "Welcome to the game.");
+        //communicateWithNetworkPlayers(this.playerList, this.playerList);
         for (int i = 0; i < this.playerList.size(); i++) {
-            System.out.println(this.playerList.get(i) + "Draws five cards");
+            communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
             for (int j = 0; j < 5; j++) {
                 this.execute(new DrawCommand(this.playerList.get(i).id));
             }
-            System.out.println("Player hand" + this.playerList.get(i).cards);
+            communicateWithNetworkPlayers(this.playerList, "Player hand" + this.playerList.get(i).cards);
         }
         while(true) {
-            this.playerList.get(this.currentPlayer).turn(playerList);
+            this.playerList.get(this.currentPlayer).turn(this.playerList);
             this.changeTurn();
         }
     }
     
     public void changeTurn() {
-        System.out.println("//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+        communicateWithNetworkPlayers(playerList, "//////////////////\n//Player " + playerList.get(currentPlayer).name + "\n//////////////////");
+        this.currentPlayer = (this.currentPlayer + 1)%playerList.size();
     }
 
     public Player getPlayer(int id) {

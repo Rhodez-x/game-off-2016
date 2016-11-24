@@ -83,26 +83,26 @@ public class Player {
                     actionsDone++;
                     break;
                 case 1:// Play a card, directly
-                    System.out.println("Which card do you want to play?" + this.cards);
+                    this.sendMsgToPlayer.println("Which card do you want to play?" + this.cards);
                     choice = game.getInput("Card", this.cards.size(), this);
                     if (choice < 0) break;
 
-                    System.out.println("You played this card" + this.cards.get(choice));
+                    this.sendMsgToPlayer.println("You played this card" + this.cards.get(choice));
                     Player other = this.choosePlayer(playerList);
                     this.playCard(choice, other);
                     actionsDone++;
                     break;
                 case 2: // Place a card in function
-                    System.out.println("Which card do you want to place?" + this.cards);
+                    this.sendMsgToPlayer.println("Which card do you want to place?" + this.cards);
                     int cardIndex = game.getInput("Card", this.cards.size(), this);
                     if (cardIndex < 0) break;
 
-                    System.out.println("In which function should it be placed?" + board.functionCards);
+                    this.sendMsgToPlayer.println("In which function should it be placed?" + board.functionCards);
                     int functionIndex = game.getInput("Function", board.functionCards.size(), this);
                     if (functionIndex < 0) break;
 
                     if (board.functionCards.get(functionIndex).cards.size() > 0) {
-                        System.out.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
+                        this.sendMsgToPlayer.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
                         choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1, this);
                         if (functionIndex < 0) break;
                     }
