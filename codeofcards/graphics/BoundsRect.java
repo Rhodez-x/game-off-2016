@@ -13,4 +13,8 @@ public class BoundsRect {
 	public boolean pointInside(float px, float py) {
 		return px >= x && px <= x + w && py >= y && py <= y + h;
 	}
+
+	public float[] getPointOffset(float px, float py) {
+		return new float[]{px - x, py - y};
+	}
 }

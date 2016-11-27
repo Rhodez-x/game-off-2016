@@ -3,102 +3,31 @@ package codeofcards.graphics;
 import codeofcards.Game;
 import codeofcards.Board;
 import codeofcards.cards.*;
+import codeofcards.graphics.CardViewNode.ClickedNodeResult;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
-import processing.core.PVector;
 
 public class GameView extends PApplet {
 
-	public PFont labelFont;
-	
-	public final float cardHeight = 32;
-	public final float cardWidth = 300;
-	public final float halfCardHeight = 0.5f*cardHeight;
-	public final float paddingX = 10;
-	public final float paddingY = 16;
-
-	public final int functionCardFill = color(156, 196, 246);
-	public final int statementCardFill = color(240, 240, 240);
-	public final int controlFlowCardFill = color(250, 200, 180);
-	public final int functionCardStroke = lerpColor(functionCardFill, 0xff000000, 0.6f);
-	public final int statementCardStroke = lerpColor(statementCardFill, 0xff000000, 0.6f);
-	public final int controlFlowCardStroke = lerpColor(controlFlowCardFill, 0xff000000, 0.6f);
+	public enum GuiState {
+		IDLE, BEGIN_DRAG, DRAGGING
+	}
 
 	public Board board;
 	public Game game;
-
-	public float getDrawHeight(Card card) {
-		if (card instanceof StatementCard) {
-			return cardHeight;
-		}
-
-		float sum = cardHeight + paddingY;
-		for (Card c : ((FlowCard)card).cards) {
-			sum += getDrawHeight(c);
-		}
-		return sum;
-	}
-
-	public float drawCard(Card card, float x, float y) {
-		return drawCard(card, x, y, cardWidth);
-	}
-	
-	public float drawCard(Card card, float x, float y, float drawWidth) {
-		boolean hasCycles = false;
-		
-		if (card instanceof StatementCard) {
-			stroke(statementCardStroke);
-			fill(statementCardFill);
-		}
-		else if (card instanceof FunctionCard) {
-			stroke(functionCardStroke);
-			fill(functionCardFill);
-			hasCycles = true;
-		}
-		else if (card instanceof FlowCard) {
-			stroke(controlFlowCardStroke);
-			fill(controlFlowCardFill);
-		}
-		
-		float drawHeight = getDrawHeight(card);
-		strokeWeight(1);
-		rect(x, y, drawWidth, drawHeight);
-		textSize(20);
-		textAlign(LEFT, CENTER);
-		fill(0);
-		text(card.text, x+paddingX, y+halfCardHeight);
-		
-		if (hasCycles) {
-			fill(255);
-			
-			float cycleCountX = x+drawWidth-paddingX-15;
-			float cycleCountY = y+halfCardHeight;
-			
-			rect(cycleCountX - 15, cycleCountY - 15, 30, 30);
-			textAlign(CENTER, CENTER);
-			fill(0);
-			text(((FunctionCard)card).cycles, cycleCountX, cycleCountY);
-		}
-
-		if (card instanceof FlowCard) {
-			for (Card c : ((FlowCard)card).cards) {
-				y += drawCard(c, x + paddingX, y + cardHeight, drawWidth);
-			}
-		}
-		
-		return drawHeight;
-	}
-
-	public void settings() {
-		size(1024, 768);
-	}
 
 	public FunctionCard fc;
 	public RepeatCard rc2;
 
 	public CardViewNode root;
 	public CardViewTree tree;
+
+	public GuiState guiState = GuiState.IDLE;
+	
+	public void settings() {
+		size(1024, 768);
+	}
 	
 	public void setup() {
 		surface.setResizable(true);
@@ -108,24 +37,26 @@ public class GameView extends PApplet {
 		fc.pushCard(new StatementCard("function.cycles++", 5, StatementCard.StatementType.CyclesIncrement));
 		RepeatCard rc = new RepeatCard("Repeat 3", 3, 3);
 		rc.pushCard(new StatementCard("self.life++", 5, StatementCard.StatementType.SelfIncrementLife));
-		fc.pushCard(rc);
+		
 		rc2 = new RepeatCard("Repeat 5", 5, 3);
+		rc2.pushCard(rc);
+		fc.pushCard(rc2);
 		RepeatCard rc3 = new RepeatCard("Repeat 3", 3, 3);
 		rc2.pushCard(rc3);
 		rc3.pushCard(new StatementCard("self.life--", 5, StatementCard.StatementType.SelfDecrementLife));
-
-		fc.pushCard(rc2);
-		fc.pushCard(rc2);
+//
+//		fc.pushCard(rc2);
+//		fc.pushCard(rc2);
 		
 		root = new CardViewNode(fc);
-		
 		tree = new CardViewTree(root, 100, 100);
 		
-		labelFont = loadFont("RobotoCondensed-Regular-23.vlw");
-		textFont(labelFont);
+//		PFont labelFont = loadFont("RobotoCondensed-Regular-23.vlw");
+//		textFont(labelFont);
 		
 		strokeWeight(1);
 		g = getGraphics();
+		g.textSize(13);
 		
 	}
 
@@ -137,101 +68,129 @@ public class GameView extends PApplet {
 	
 	CardViewNode clickedNode = null;
 	boolean lastMousePressed = false;
+		
+	public CardViewTree dragTree = null;
 	
-	boolean beginDrag = false;
+	public String debugStr = "";
+	
+	public float insertLineX, insertLineY, insertLineX2, insertLineY2;
 
 	public void draw() {
-		background(50);
-//		if (clickedNode == null && mousePressed && !lastMousePressed) {
-			clickedNode = tree.getClickedNode(mouseX, mouseY);
-//		}
-//		else if (clickedNode != null && !mousePressed && lastMousePressed) {
-//			clickedNode = null;
-//		}
+
+		// Update state
+		if (guiState == GuiState.IDLE) {
+			if (mousePressed && !lastMousePressed) {
+				ClickedNodeResult cnr = tree.getNodeAtPoint(mouseX, mouseY); 
+				if (cnr != null) {
+					clickedNode = cnr.clickedNode;
+					cx = mouseX;
+					cy = mouseY;
+					cox = cnr.xOffset;
+					coy = cnr.yOffset;
+					guiState = GuiState.BEGIN_DRAG;
+				}
+			}
+		}
+		else {
+			boolean mouseReleased = !mousePressed && lastMousePressed;
+			
+			if(guiState == GuiState.DRAGGING) {
+				boolean prepend = false;
+				boolean asChild = false;
+				
+				ClickedNodeResult cnr = tree.getNodeAtPoint(mouseX - cox, mouseY - coy);
+				
+				if (cnr != null) {
+					float yPct = cnr.yOffset / CardViewNode.cardHeight;
+					if (yPct <= 0.5f) {
+						prepend = true;
+						asChild = false;
+					}
+					else {
+						if (cnr.clickedNode.isLeaf) {
+							prepend = false;
+							asChild = false;
+						}
+						else {
+							prepend = (yPct <= 1);
+							asChild = true;
+						}
+					}
+					
+					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;
+					
+					if (mouseReleased) {
+						CardViewNode node = cnr.clickedNode;
+						if (asChild) {
+							if (prepend) {
+								node.insertChildTop(dragTree.root);
+							}
+							else {
+								node.insertChildBottom(dragTree.root);
+							}
+						}
+						else {
+							if (prepend) {
+								node.insertBefore(dragTree.root);
+							}
+							else {
+								node.insertAfter(dragTree.root);
+							}
+						}
+					}
+				}
+				//tree.checkForPotentialDropSpot(mouseX - cox, mouseY - coy);
+			}
+			
+			if (mouseReleased) {
+				clickedNode = null;
+				dragTree = null;
+				guiState = GuiState.IDLE;
+			}
+			
+		}
+		
+		if (guiState == GuiState.BEGIN_DRAG) {
+			float dx = mouseX - cx;
+			float dy = mouseY - cy;
+			
+			// inline of something like magnitude(vec(dx, dy)) > 24
+			if (dx*dx + dy*dy > 2) {
+				guiState = GuiState.DRAGGING;
+				if (clickedNode.parent != null) {
+					clickedNode.removeFromTree();
+					dragTree = new CardViewTree(clickedNode, mouseX, mouseY);
+				}
+				else {
+					dragTree = tree;
+				}
+				clickedNode = null;
+			}
+		}
 		lastMousePressed = mousePressed;
+		
+		tree.root.updateBounds();
+		
+		// Draw
+		background(0xff40b020);
+		
 		tree.draw(g, clickedNode);
+
+		if (guiState == GuiState.DRAGGING) {
+			dragTree.root.updateBounds();
+			dragTree.x = mouseX - cox;
+			dragTree.y = mouseY - coy;
+			dragTree.draw(g, dragTree.root);
+		}
+		
+		text(debugStr, 5, 20);
 	}
-	
-//	public void draw() {
-//		
-//		background(0xffaaaaaa);
-//		
-//		if (!root.hidden)
-//			root.draw(g);
-//		
-//		if (clickedNode != null) {
-//			if (dragging) {
-//				clickedNode.draw(g, mouseX + cox, mouseY + coy, true);	
-//			}
-//			else {
-//				clickedNode.draw(g, true);
-//			}
-//			if (!mousePressed && lastMousePressed) {	
-//				clickedNode.hidden = false;
-//				clickedNode = null;
-//				beginDrag = false;
-//				dragging = false;
-//			}
-//		}
-//		
-//		if (beginDrag) {
-//			float dx = mouseX - cx;
-//			float dy = mouseY - cy;
-//			
-//			if (dx*dx + dy*dy > 2500) {
-//				clickedNode.hidden = true;
-//				beginDrag = false;
-//				dragging = true;
-//			}
-//		}
-//		
-//		if (mousePressed && !lastMousePressed) {
-//			
-//			clickedNode = root.getClickedNode(mouseX, mouseY);
-//			if (clickedNode != null) {
-//				cox = clickedNode.left() - mouseX;
-//				coy = clickedNode.top() - mouseY;
-//				cx = mouseX;
-//				cy = mouseY;
-//				beginDrag = true;
-//			}
-//		}
-//		
-//		lastMousePressed = mousePressed;
-//		
-//		
-////		background(100);
-////		if (mousePressed) {
-////			if (!dragging &&
-////					mouseX >= cx && mouseX <= cx + cardWidth &&
-////					mouseY >= cy && mouseY <= cy + getDrawHeight(fc)) {
-////				dragging = true;
-////				cox = mouseX - cx;
-////				coy = mouseY - cy;
-////			}
-////		}
-////		
-////		if(dragging) {
-////			if(!mousePressed) {
-////				dragging = false;
-////			} else {
-////				cx = mouseX - cox;
-////				cy = mouseY - coy;
-////			}
-////		}
-////		
-////		drawCard(fc, cx, cy);
-////		drawCard(rc2, cx, cy);
-//	}
 
 	public GameView() {
-		this.game = new Game();
-		this.board = game.board;
+		//this.game = new Game();
+		//this.board = game.board;
 
 //		game.hostGame();
 	}
 
-	public void drawGameBoard() {
-
-	}
 }
