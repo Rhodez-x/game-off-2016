@@ -271,47 +271,47 @@ public class CardViewNode {
 		return result;
 	}
 	
-	public class DropSpotResult {
-		public CardViewNode sibling;
-		public boolean after;
-		
-		public DropSpotResult(CardViewNode sibling, boolean after) {
-			this.sibling = sibling;
-			this.after = after;
-		}
-	}
+//	public class DropSpotResult {
+//		public CardViewNode sibling;
+//		public boolean after;
+//		
+//		public DropSpotResult(CardViewNode sibling, boolean after) {
+//			this.sibling = sibling;
+//			this.after = after;
+//		}
+//	}
 
-	public DropSpotResult checkForPotentialDropSpot(float checkX, float checkY) {
-		DropSpotResult result = null;
-
-		if (!isLeaf) {
-			CardViewNode c = firstChild;
-			while(c != null) {
-				if (c.toBeRemoved) {
-					continue;
-				}
-				result = c.checkForPotentialDropSpot(checkX, checkY);
-				if (result != null) {
-					return result;
-				}
-				
-				c = c.nextSibling;
-			}
-		}
-		
-		if (relativeBounds.pointInside(checkX, checkY)) {
-			float yPct = (checkY - relativeBounds.y) / relativeBounds.h;
-			
-			if (yPct < 0.15f) {
-				result = new DropSpotResult(this, false);
-			}
-			else if(yPct >= 0.85f) {
-				result = new DropSpotResult(this, true);
-			}
-		}
-		
-		return result;
-	}
+//	public DropSpotResult checkForPotentialDropSpot(float checkX, float checkY) {
+//		DropSpotResult result = null;
+//
+//		if (!isLeaf) {
+//			CardViewNode c = firstChild;
+//			while(c != null) {
+//				if (c.toBeRemoved) {
+//					continue;
+//				}
+//				result = c.checkForPotentialDropSpot(checkX, checkY);
+//				if (result != null) {
+//					return result;
+//				}
+//				
+//				c = c.nextSibling;
+//			}
+//		}
+//		
+//		if (relativeBounds.pointInside(checkX, checkY)) {
+//			float yPct = (checkY - relativeBounds.y) / relativeBounds.h;
+//			
+//			if (yPct < 0.15f) {
+//				result = new DropSpotResult(this, false);
+//			}
+//			else if(yPct >= 0.85f) {
+//				result = new DropSpotResult(this, true);
+//			}
+//		}
+//		
+//		return result;
+//	}
 
 	public void draw(PGraphics g) { draw(g, null); }
 	public void draw(PGraphics g, CardViewNode clicked) {
@@ -320,7 +320,7 @@ public class CardViewNode {
 		g.stroke(strokeColor);
 		
 		g.textAlign(PConstants.LEFT, PConstants.CENTER);
-		g.stroke(0);
+		g.stroke(0x60000000);
 		g.strokeWeight(1);
 		
 		int fillColor = (selected) ? this.activeFillColor : this.fillColor;

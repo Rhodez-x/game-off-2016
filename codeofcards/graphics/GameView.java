@@ -23,7 +23,9 @@ public class GameView extends PApplet {
 
 	public CardViewNode root;
 	public CardViewTree tree;
+	public CardViewNodeInsertionLine insertPoint;
 
+	
 	public GuiState guiState = GuiState.IDLE;
 	
 	public void settings() {
@@ -51,13 +53,15 @@ public class GameView extends PApplet {
 		
 		root = new CardViewNode(fc);
 		tree = new CardViewTree(root, 100, 100);
+		insertPoint = new CardViewNodeInsertionLine();
+		insertPoint.setTree(tree);
 		
 //		PFont labelFont = loadFont("RobotoCondensed-Regular-23.vlw");
 //		textFont(labelFont);
 		
 		strokeWeight(1);
 		g = getGraphics();
-		g.textSize(13);
+		g.textSize(12);
 		
 	}
 
@@ -74,7 +78,6 @@ public class GameView extends PApplet {
 	
 	public String debugStr = "";
 	
-	public float insertLineX, insertLineY, insertLineX2, insertLineY2;
 	public RemovedFromSpot dragFromSpot = null;
 
 	public void draw() {
@@ -119,6 +122,23 @@ public class GameView extends PApplet {
 						}
 					}
 					
+					CardViewNode node = cnr.clickedNode;
+					if (asChild) {
+						if (prepend) {
+							node.insertChildTop(insertPoint);
+						}
+						else {
+							node.insertChildBottom(insertPoint);
+						}
+					}
+					else if (node.parent != null) {
+						if (prepend) {
+							node.insertBefore(insertPoint);
+						}
+						else {
+							node.insertAfter(insertPoint);
+						}
+					}
 					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;	
 				}
 				
@@ -153,8 +173,6 @@ public class GameView extends PApplet {
 						}
 					}
 				}
-//				
-				//tree.checkForPotentialDropSpot(mouseX - cox, mouseY - coy);
 			}
 			
 			if (mouseReleased) {
@@ -170,7 +188,7 @@ public class GameView extends PApplet {
 			float dy = mouseY - cy;
 			
 			// inline of something like magnitude(vec(dx, dy)) > 24
-			if (dx*dx + dy*dy > 2) {
+			if (dx*dx + dy*dy > 20) {
 				guiState = GuiState.DRAGGING;
 				if (clickedNode.parent != null) {
 					dragFromSpot  = clickedNode.removeFromTree();
@@ -190,6 +208,16 @@ public class GameView extends PApplet {
 		background(0xff40b020);
 		
 		tree.draw(g, clickedNode);
+		if (insertPoint.tree != null) {
+			if(insertPoint.relativeBounds != null) {
+				insertPoint.draw(g, null);
+			}
+			else {
+				System.out.println("MEH!");
+			}
+			insertPoint.removeFromTree();
+		}
+		
 
 		if (guiState == GuiState.DRAGGING) {
 			dragTree.root.updateBounds();
