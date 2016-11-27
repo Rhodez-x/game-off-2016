@@ -4,6 +4,7 @@ import codeofcards.Game;
 import codeofcards.Board;
 import codeofcards.cards.*;
 import codeofcards.graphics.CardViewNode.ClickedNodeResult;
+import codeofcards.graphics.CardViewNode.RemovedFromSpot;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -74,6 +75,7 @@ public class GameView extends PApplet {
 	public String debugStr = "";
 	
 	public float insertLineX, insertLineY, insertLineX2, insertLineY2;
+	public RemovedFromSpot dragFromSpot = null;
 
 	public void draw() {
 
@@ -117,9 +119,11 @@ public class GameView extends PApplet {
 						}
 					}
 					
-					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;
-					
-					if (mouseReleased) {
+					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;	
+				}
+				
+				if (mouseReleased && dragTree != tree) {
+					if (cnr != null) {
 						CardViewNode node = cnr.clickedNode;
 						if (asChild) {
 							if (prepend) {
@@ -129,7 +133,7 @@ public class GameView extends PApplet {
 								node.insertChildBottom(dragTree.root);
 							}
 						}
-						else {
+						else if (node.parent != null) {
 							if (prepend) {
 								node.insertBefore(dragTree.root);
 							}
@@ -137,8 +141,19 @@ public class GameView extends PApplet {
 								node.insertAfter(dragTree.root);
 							}
 						}
+						else {
+							if (dragFromSpot != null) {
+								dragFromSpot.restore(dragTree.root);
+							}
+						}
+					}
+					else {
+						if (dragFromSpot != null) {
+							dragFromSpot.restore(dragTree.root);
+						}
 					}
 				}
+//				
 				//tree.checkForPotentialDropSpot(mouseX - cox, mouseY - coy);
 			}
 			
@@ -158,7 +173,7 @@ public class GameView extends PApplet {
 			if (dx*dx + dy*dy > 2) {
 				guiState = GuiState.DRAGGING;
 				if (clickedNode.parent != null) {
-					clickedNode.removeFromTree();
+					dragFromSpot  = clickedNode.removeFromTree();
 					dragTree = new CardViewTree(clickedNode, mouseX, mouseY);
 				}
 				else {
@@ -169,7 +184,7 @@ public class GameView extends PApplet {
 		}
 		lastMousePressed = mousePressed;
 		
-		tree.root.updateBounds();
+//		tree.root.updateBounds();
 		
 		// Draw
 		background(0xff40b020);

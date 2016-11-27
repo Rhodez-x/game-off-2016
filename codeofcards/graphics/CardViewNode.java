@@ -163,8 +163,32 @@ public class CardViewNode {
 		}
 		tree = newTree;
 	}
+	
+	public class RemovedFromSpot {
+		public CardViewNode parent, nextSibling, prevSibling;
+		
+		public void restore(CardViewNode node) {
+			if (prevSibling != null) {
+				prevSibling.insertAfter(node);
+			}
+			else if (nextSibling != null) {
+				nextSibling.insertBefore(node);
+			}
+			else if (parent != null) {
+				parent.insertChildTop(node);
+			}
+			else {
+				System.out.println("Hello");
+			}
+		}
+	}
 
-	public void removeFromTree() {
+	public RemovedFromSpot removeFromTree() {
+		RemovedFromSpot result = new RemovedFromSpot();
+		result.parent = parent;
+		result.nextSibling = nextSibling;
+		result.prevSibling = prevSibling;
+		
 		if(parent != null && parent.firstChild == this) {
 			parent.firstChild = nextSibling;
 		}
@@ -183,6 +207,8 @@ public class CardViewNode {
 		tree.root.updateBounds();
 		
 		setTree(null);
+		
+		return result;
 	}
 	
 	public float updateBounds() { return updateBounds(0, 0); }
