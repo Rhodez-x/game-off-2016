@@ -1,10 +1,12 @@
 package codeofcards;
 
 import codeofcards.cards.Card;
+import codeofcards.cards.FunctionCard;
 import codeofcards.cards.StatementCard;
 import codeofcards.commands.*;
 import java.io.IOException;
 import java.io.PrintStream;
+import static java.lang.String.format;
 import java.net.Socket;
 
 import java.util.*;
@@ -17,6 +19,7 @@ public class Player {
     public Scanner playersInput;
     private Game game;
     private Board board;
+    private Board playerBoard;
     public int life;
     public int actionLeft;
     public int discardCount; // The number of card the player has to discard in the satrt of the players turn.
@@ -31,6 +34,10 @@ public class Player {
         this.life = 30;
         this.game = game;
         this.board = game.board;
+        this.playerBoard = new Board();
+        for (int i = 0; i < 2; i++) {
+            this.playerBoard.addFunctionToBoard(new FunctionCard("Function", 1, 20));
+        }
         this.playerSocket = playerSocket;
         this.sendMsgToPlayer = new PrintStream(this.playerSocket.getOutputStream());
         this.playersInput = new Scanner(this.playerSocket.getInputStream());
@@ -57,9 +64,11 @@ public class Player {
         int actionsDone = 0;
 
         while(actionsDone < 3){
+            String temp = "";
             for (Player players : playerList) {
-                System.out.format("%s: %2d | %s: %2d\n", name, life, players.name, players.life);
+                temp = temp + players.name + " " + players.life + " " + players.playerBoard.functionCards + "\n";
             }
+            this.game.communicateWithNetworkPlayers(playerList, temp);
     
 
             this.sendMsgToPlayer.println("Board:");
@@ -93,24 +102,35 @@ public class Player {
                     actionsDone++;
                     break;
                 case 2: // Place a card in function
+                    // First ask player on witch  board, own og tabel board
+                    this.sendMsgToPlayer.println("Where to place the card: \n 1: Place card in own hand? \n 2: Place card on tabel");
+                    int witchBoard = game.getInput("Card", this.cards.size(), this);
+                    Board choosenBoard = board;
+                    if (witchBoard == 0) {
+                        choosenBoard = this.playerBoard;
+                    } else if (witchBoard == 1) {
+                        choosenBoard = this.board;
+                    }
+                    // witch card to be played
                     this.sendMsgToPlayer.println("Which card do you want to place?" + this.cards);
                     int cardIndex = game.getInput("Card", this.cards.size(), this);
                     if (cardIndex < 0) break;
-
-                    this.sendMsgToPlayer.println("In which function should it be placed?" + board.functionCards);
-                    int functionIndex = game.getInput("Function", board.functionCards.size(), this);
+                    
+                    //In witch funciton 
+                    this.sendMsgToPlayer.println("In which function should it be placed?" + choosenBoard.functionCards);
+                    int functionIndex = game.getInput("Function", choosenBoard.functionCards.size(), this);
                     if (functionIndex < 0) break;
 
-                    if (board.functionCards.get(functionIndex).cards.size() > 0) {
-                        this.sendMsgToPlayer.println("Where in the function should it be placed?" + board.functionCards.get(functionIndex).cards);
-                        choice = game.getInput("Index", board.functionCards.get(functionIndex).cards.size() + 1, this);
+                    if (choosenBoard.functionCards.get(functionIndex).cards.size() > 0) {
+                        this.sendMsgToPlayer.println("Where in the function should it be placed?" + choosenBoard.functionCards.get(functionIndex).cards);
+                        choice = game.getInput("Index", choosenBoard.functionCards.get(functionIndex).cards.size() + 1, this);
                         if (functionIndex < 0) break;
                     }
                     else {
                         choice = 0;
                     }
 
-                    game.serverExecute(new AddCardToFunctionCommand(id, cards.get(cardIndex), functionIndex, choice));
+                    game.serverExecute(new AddCardToFunctionCommand(id, cards.get(cardIndex), functionIndex, choice, choosenBoard));
                     actionsDone++;
                     break;
                 default: // CodeOfCards.Player chooise a worng number.
@@ -120,9 +140,8 @@ public class Player {
     }
 
     public Player choosePlayer(ArrayList<Player> playerList) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println(playerList);
-        int theChoose = sc.nextInt();
+        this.sendMsgToPlayer.println(playerList);
+        int theChoose = game.getInput("Card", cards.size(), this);
         return playerList.get(theChoose);
     }
     
@@ -135,11 +154,11 @@ public class Player {
                  ((StatementCard) card).statementType == StatementCard.StatementType.OtherExecuteFunction ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesIncrement ||
                  ((StatementCard) card).statementType == StatementCard.StatementType.CyclesDecrement)) {
-            System.out.println("Which function? " + board.functionCards);
+            this.sendMsgToPlayer.println("Which function? " + board.functionCards);
             functionIndex = game.getInput("Function", board.functionCards.size(), this);
         }
 
-        game.serverExecute(new PlayCardCommand(id, other.id, card, functionIndex));
+        game.serverExecute(new PlayCardCommand(this.id, other.id, card, functionIndex));
     }
 
     void playCardToFunction() { // CodeOfCards.Player lay a card to a function

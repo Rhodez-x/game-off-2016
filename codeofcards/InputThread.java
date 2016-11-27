@@ -1,6 +1,7 @@
 package codeofcards;
 
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import javafx.event.ActionEvent;
 
@@ -21,10 +22,14 @@ public class InputThread extends Thread{
         while(true) {
             recivedMsg = this.in.nextLine();
             if (recivedMsg.equals("itsyourturn4322")) {
-                //ClientTurn yourTurn = new ClientTurn();
-                System.out.println(this.client.isAlive());
-                //this.client.start();
-                input.println(new Scanner(System.in).nextInt()); 
+                while(true) {
+                    try {
+                        input.println(new Scanner(System.in).nextInt());
+                        break;
+                    } catch (NumberFormatException | InputMismatchException ex) {
+
+                    }
+                }
             } else {
                 System.out.println(recivedMsg);
             }

@@ -1,5 +1,6 @@
 package codeofcards;
 
+import codeofcards.cards.EventCard;
 import codeofcards.commands.BoardAddFunctionCommand;
 import codeofcards.commands.Command;
 import codeofcards.commands.DrawCommand;
@@ -84,6 +85,13 @@ public class Game {
             players.sendMsgToPlayer.println(playerList);
         }
         
+        // makes the standart functionscards to the bord. 
+        // Event cards
+        this.board.addFunctionToBoard(new EventCard("OnTurnStart()", 2, 15, Board.EventType.OnTurnStart));
+        this.board.addFunctionToBoard(new EventCard("OnTurnEnd()", 2, 15, Board.EventType.OnTurnEnd));
+        this.board.addFunctionToBoard(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
+        this.board.addFunctionToBoard(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
+        
         for (int i = 0; i < this.playerList.size(); i++) {
             communicateWithNetworkPlayers(this.playerList, this.playerList.get(i) + "Draws five cards");
             for (int j = 0; j < 5; j++) {
@@ -134,10 +142,6 @@ public class Game {
         command.execute(this);
     }
 
-    public void sendCommand(Command command) {
-
-    }
-
     public void serverExecute(Command command) {
         if (isHost) {
             command.execute(this);
@@ -150,7 +154,7 @@ public class Game {
         while(choice < 0 || choice > maxChoice + 1) {
             player.sendMsgToPlayer.println("itsyourturn4322");
             player.sendMsgToPlayer.format("%s [1-%d]", text, maxChoice);
-            choice = Integer.parseInt(player.playersInput.next());
+            choice = (player.playersInput.nextInt());
         }
         
         return choice - 1;

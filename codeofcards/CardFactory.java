@@ -37,19 +37,21 @@ public class CardFactory {
         this.cardPrototypes.add(new StatementCard("Function.Cycles--", 3, StatementCard.StatementType.CyclesDecrement));
 
         // Function cards
-        this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
-        this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
-        this.cardPrototypes.add(new FunctionCard("Function", 1, 20));
+        // Dosent exist as cards longer
+        //this.cardPrototypes.add(new FunctionCard("Function", 5, 5));
+        //this.cardPrototypes.add(new FunctionCard("Function", 3, 10));
+        //this.cardPrototypes.add(new FunctionCard("Function", 1, 20));
 
         // Repeat cards
         this.cardPrototypes.add(new RepeatCard("Repeat 3", 3, 3));
         this.cardPrototypes.add(new RepeatCard("Repeat 5", 1, 5));
 
-        // Event cards
-        this.cardPrototypes.add(new EventCard("OnTurnStart()", 2, 15, Board.EventType.OnTurnStart));
-        this.cardPrototypes.add(new EventCard("OnTurnEnd()", 2, 15, Board.EventType.OnTurnEnd));
-        this.cardPrototypes.add(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
-        this.cardPrototypes.add(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
+        // DAF DAF DAF
+//        Event cards
+//        this.cardPrototypes.add(new EventCard("OnTurnStart()", 2, 15, Board.EventType.OnTurnStart));
+//        this.cardPrototypes.add(new EventCard("OnTurnEnd()", 2, 15, Board.EventType.OnTurnEnd));
+//        this.cardPrototypes.add(new EventCard("OnCardPlayed()", 2, 15, Board.EventType.OnCardPlayed));
+//        this.cardPrototypes.add(new EventCard("OnCardDraw()", 2, 15, Board.EventType.OnCardDraw));
     }
 
     public Card newCard() {
