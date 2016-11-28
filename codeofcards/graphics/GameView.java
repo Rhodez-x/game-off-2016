@@ -23,8 +23,6 @@ public class GameView extends PApplet {
 
 	public CardViewNode root;
 	public CardViewTree tree;
-	public CardViewNodeInsertionLine insertPoint;
-
 	
 	public GuiState guiState = GuiState.IDLE;
 	private PGraphics g2;
@@ -54,8 +52,6 @@ public class GameView extends PApplet {
 		
 		root = new CardViewNode(fc);
 		tree = new CardViewTree(root, 100, 100);
-		insertPoint = new CardViewNodeInsertionLine();
-		insertPoint.setTree(tree);
 		
 //		PFont labelFont = loadFont("RobotoCondensed-Regular-23.vlw");
 //		textFont(labelFont);
@@ -139,9 +135,12 @@ public class GameView extends PApplet {
 							insertY += node.relativeBounds.h - CardViewNode.paddingY;
 						}
 					}
-					else if (node.parent != null) {
+					else {
 						if (!prepend) {
 							insertY += node.relativeBounds.h;
+						}
+						else if(node.parent == null) {
+							insertY = -99;
 						}
 					}
 					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;	
@@ -208,7 +207,7 @@ public class GameView extends PApplet {
 		lastMousePressed = mousePressed;
 				
 		// Draw
-		background(0xff20a010);
+		background(0xff109920);
 		
 		if (tree != dragTree)
 			tree.draw(g, clickedNode);
@@ -229,13 +228,6 @@ public class GameView extends PApplet {
 		}
 		
 		text(debugStr, 5, 20);
-	}
-
-	public GameView() {
-		//this.game = new Game();
-		//this.board = game.board;
-
-//		game.hostGame();
 	}
 
 }
