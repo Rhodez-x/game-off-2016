@@ -27,6 +27,7 @@ public class GameView extends PApplet {
 
 	
 	public GuiState guiState = GuiState.IDLE;
+	private PGraphics g2;
 	
 	public void settings() {
 		size(1024, 768);
@@ -61,6 +62,7 @@ public class GameView extends PApplet {
 		
 		strokeWeight(1);
 		g = getGraphics();
+		g2 = createGraphics(g.width, g.height);
 		g.textSize(12);
 		
 	}
@@ -79,6 +81,8 @@ public class GameView extends PApplet {
 	public String debugStr = "";
 	
 	public RemovedFromSpot dragFromSpot = null;
+	public float insertX = 0;
+	public float insertY = 0;
 
 	public void draw() {
 
@@ -90,8 +94,8 @@ public class GameView extends PApplet {
 					clickedNode = cnr.clickedNode;
 					cx = mouseX;
 					cy = mouseY;
-					cox = cnr.xOffset;
-					coy = cnr.yOffset;
+					cox = (clickedNode.parent != null) ? 0 : cnr.xOffset;
+					coy = (clickedNode.parent != null) ? 0 : cnr.yOffset;
 					guiState = GuiState.BEGIN_DRAG;
 				}
 			}
@@ -123,20 +127,21 @@ public class GameView extends PApplet {
 					}
 					
 					CardViewNode node = cnr.clickedNode;
+					
+					insertX = node.relativeBounds.x + node.tree.x;
+					insertY = node.relativeBounds.y + node.tree.y - 2;
 					if (asChild) {
+						insertX += CardViewNode.paddingX;
 						if (prepend) {
-							node.insertChildTop(insertPoint);
+							insertY += CardViewNode.cardHeight;
 						}
 						else {
-							node.insertChildBottom(insertPoint);
+							insertY += node.relativeBounds.h - CardViewNode.paddingY;
 						}
 					}
 					else if (node.parent != null) {
-						if (prepend) {
-							node.insertBefore(insertPoint);
-						}
-						else {
-							node.insertAfter(insertPoint);
+						if (!prepend) {
+							insertY += node.relativeBounds.h;
 						}
 					}
 					debugStr = "prepend = " + prepend + "\nasChild = " + asChild;	
@@ -201,29 +206,26 @@ public class GameView extends PApplet {
 			}
 		}
 		lastMousePressed = mousePressed;
-		
-//		tree.root.updateBounds();
-		
+				
 		// Draw
-		background(0xff40b020);
+		background(0xff20a010);
 		
-		tree.draw(g, clickedNode);
-		if (insertPoint.tree != null) {
-			if(insertPoint.relativeBounds != null) {
-				insertPoint.draw(g, null);
-			}
-			else {
-				System.out.println("MEH!");
-			}
-			insertPoint.removeFromTree();
-		}
+		if (tree != dragTree)
+			tree.draw(g, clickedNode);
 		
-
 		if (guiState == GuiState.DRAGGING) {
 			dragTree.root.updateBounds();
 			dragTree.x = mouseX - cox;
 			dragTree.y = mouseY - coy;
 			dragTree.draw(g, dragTree.root);
+		}
+		
+		if (dragTree != tree) {
+			//insertPoint.draw(g, null);
+			g.stroke(0);
+			g.fill(0xffffff00);
+			g.rect(insertX, insertY, CardViewNode.cardWidth, 4);
+			insertY = -99;
 		}
 		
 		text(debugStr, 5, 20);

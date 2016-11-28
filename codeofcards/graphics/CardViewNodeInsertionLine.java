@@ -1,6 +1,5 @@
 package codeofcards.graphics;
 
-import codeofcards.cards.Card;
 import processing.core.PGraphics;
 
 public class CardViewNodeInsertionLine extends CardViewNode {
@@ -8,6 +7,26 @@ public class CardViewNodeInsertionLine extends CardViewNode {
 	public CardViewNodeInsertionLine() {
 		super(null);
 		this.isLeaf = true;
+	}
+	
+	public void replaceWith(CardViewNode node) {
+		if (parent != null && parent.firstChild == this) {
+			parent.firstChild = node;
+		}
+		if (prevSibling != null) {
+			prevSibling.nextSibling = node;
+		}
+		if (nextSibling != null) {
+			nextSibling.prevSibling = node;
+		}
+		
+		node.parent = parent;
+		node.nextSibling = nextSibling;
+		node.prevSibling = prevSibling;
+
+		node.setTree(tree);
+		this.removeFromTree();
+		node.tree.root.updateBounds();
 	}
 	
 	@Override
@@ -25,7 +44,7 @@ public class CardViewNodeInsertionLine extends CardViewNode {
 		float drawWidth = relativeBounds.w;
 		float drawHeight = relativeBounds.h;
 		
-		g.noStroke();
+		g.stroke(0);
 		g.fill(0xffffff00);
 		g.rect(drawX, drawY, drawWidth, drawHeight);
 	}
